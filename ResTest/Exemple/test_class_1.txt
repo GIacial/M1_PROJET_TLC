@@ -1,0 +1,273 @@
+
+
+ COM trouve : // les retour à la ligne sont en code unix \n et non windows => pense a verifier dans View => Line Ending
+
+
+
+
+ KW_CLASS trouve : class
+
+
+
+ IDENF trouve : Fg
+
+
+
+ KW_DATA trouve : data
+
+
+
+ TYP_PRIMITIF trouve : float
+
+
+
+ IDENF trouve : fg
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ TYP_PRIMITIF trouve : bool
+
+
+
+ IDENF trouve : y
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ TYP_PRIMITIF trouve : int
+
+
+
+ IDENF trouve : z
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ KW_FUNCTION trouve : function
+
+
+
+ IDENF trouve : fg
+
+
+
+ PAR_OUV trouve : (
+
+
+
+ PAR_FER trouve : )
+
+
+
+ KW_RETURN trouve : return
+
+
+
+ TYP_PRIMITIF trouve : int
+
+
+
+ FUNC_OUV trouve : {
+
+
+
+ KW_RETURN trouve : return
+
+
+
+ IDENF trouve : z
+
+
+
+ OP_PLUS trouve : +
+
+
+
+ SIGNED_VAL_INT trouve : -5
+
+
+
+ FUNC_FERM trouve : }
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ IDENF trouve : gh
+
+
+
+ PAR_OUV trouve : (
+
+
+
+ PAR_FER trouve : )
+
+
+
+ FUNC_OUV trouve : {
+
+
+
+ IDENF trouve : z
+
+
+
+ OP_AFF trouve : :=
+
+
+
+ IDENF trouve : z
+
+
+
+ OP_PLUS trouve : +
+
+
+
+ VAL_INT trouve : 1
+
+
+
+ FUNC_FERM trouve : }
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ IDENF trouve : jh
+
+
+
+ PAR_OUV trouve : (
+
+
+
+ TYP_PRIMITIF trouve : int
+
+
+
+ IDENF trouve : a
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ TYP_PRIMITIF trouve : bool
+
+
+
+ IDENF trouve : b
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ TYP_PRIMITIF trouve : float
+
+
+
+ IDENF trouve : c
+
+
+
+ PAR_FER trouve : )
+
+
+
+ FUNC_OUV trouve : {
+
+
+
+ PAR_OUV trouve : (
+
+
+
+ IDENF trouve : fg
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ IDENF trouve : y
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ IDENF trouve : z
+
+
+
+ PAR_FER trouve : )
+
+
+
+ OP_AFF trouve : :=
+
+
+
+ PAR_OUV trouve : (
+
+
+
+ IDENF trouve : c
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ IDENF trouve : b
+
+
+
+ SEP_PARAM trouve : ,
+
+
+
+ IDENF trouve : a
+
+
+
+ PAR_FER trouve : )
+
+
+
+ FUNC_FERM trouve : }
+
+
+
+ SEP_INSTRUCT trouve : ;
+
+
+
+ KW_ENDCLASS trouve : endClass
+
+
+
+ Fin du programme avec le code 0 
+

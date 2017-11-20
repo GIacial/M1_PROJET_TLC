@@ -1,0 +1,4 @@
+for VAR in $(find Exemple/*.txt);
+do
+	./lex.exe < $VAR > ResTest/$VAR
+done 

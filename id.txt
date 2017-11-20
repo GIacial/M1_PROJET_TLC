@@ -1,0 +1,29 @@
+<class> fg [<extend> ng]
+	
+	<data>
+		<type (float)> 	x;
+		<type (bool)> 	y;
+		<type (int)> 	z;
+
+	<function>
+		fg() [<return> <type ()>] {[<return>] code...};
+		gh() {code};
+		jh([<type ()> bn , <type ()> nb,...]) {x := x+y*z -x/y};
+
+
+
+<endClass>
+
+
+//declaration
+fg j;
+j:=(x,y,z);
+<type (int)> i;			//declaration != affectation
+i := j->fg();
+int j;
+j := 2;
+j := j+i;
+float h;
+h := 2.5;
+bool z;
+z = true && !false;
