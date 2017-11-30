@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+#ignore test result files
+ResTest/*
+
 # Object files
 *.o
 *.ko
