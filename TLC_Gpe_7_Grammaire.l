@@ -24,6 +24,14 @@ OP_MULTI		"*"
 OP_DIV			"/"
 OP_AFF			":="
 OP_FUNC			"->"
+OP_INF			"<"
+OP_INF_EQ		"<="
+OP_SUP			">"
+OP_SUP_EQ		">="
+OP_DIFF			"!="
+OP_EQ 			"=="
+OP_AND			"&&"
+OP_OR			"||"
 KW_ENDCLASS		endClass
 VAL_BOOL		"true"|"false"
 VAL_INT			[0-9]+
@@ -58,7 +66,14 @@ COMMENT			"//".*\n
 {OP_DIV}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_DIV trouve : %s\n\n" , yytext);}
 {OP_AFF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_AFF trouve : %s\n\n" , yytext);}
 {OP_FUNC}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_FUNC trouve : %s\n\n" , yytext);}
-
+{OP_INF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_INF trouve : %s\n\n" , yytext);}
+{OP_INF_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_INF_EQ trouve : %s\n\n" , yytext);}
+{OP_SUP}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_SUP trouve : %s\n\n" , yytext);}
+{OP_SUP_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_SUP_EQ trouve : %s\n\n" , yytext);}
+{OP_DIFF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_DIFF trouve : %s\n\n" , yytext);}
+{OP_EQ}										{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_EQ trouve : %s\n\n" , yytext);}
+{OP_AND}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_AND trouve : %s\n\n" , yytext);}
+{OP_OR}										{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_OR trouve : %s\n\n" , yytext);}
 
 <SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_INT}		{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n SIGNED_VAL_INT trouve : %s\n\n" , yytext);}
 <SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_FLOAT}		{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n VAL_FLOAT trouve : %s\n\n" , yytext);}
@@ -79,10 +94,3 @@ COMMENT			"//".*\n
 
 
 
-int main(){
-	BEGIN (SIGNED_NUM_POSSIBLE);
-	int code = yylex();
-	printf("\n\n Fin du programme avec le code %d \n\n",code);
-	
-	return 0;
-}
