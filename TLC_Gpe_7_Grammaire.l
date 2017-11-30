@@ -1,5 +1,6 @@
 %{
 	#include <string.h>
+	#include "TLC_GPE_7_Grammaire_v1.tab.h"
 %}
 CHIFFRE			[0-9]
 MINUS			[a-z]
@@ -46,49 +47,49 @@ COMMENT			"//".*\n
 
 %%
 
-{KW_CLASS} 									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_CLASS trouve : %s\n\n" , yytext);}
-{KW_EXTEND}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_EXTEND trouve : %s\n\n" , yytext);}
-{KW_DATA}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_DATA trouve : %s\n\n" , yytext);}
-{KW_FUNCTION}								{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_FUNCTION trouve : %s\n\n" , yytext);}
-{KW_RETURN}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_RETURN trouve : %s\n\n" , yytext);}
-{KW_ENDCLASS}								{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n KW_ENDCLASS trouve : %s\n\n" , yytext);}
+{KW_CLASS} 									{BEGIN (SIGNED_NUM_POSSIBLE);return KW_CLASS;}
+{KW_EXTEND}									{BEGIN (SIGNED_NUM_POSSIBLE);return KW_EXTEND;}
+{KW_DATA}									{BEGIN (SIGNED_NUM_POSSIBLE);return KW_DATA;}
+{KW_FUNCTION}								{BEGIN (SIGNED_NUM_POSSIBLE);return KW_FUNCTION;}
+{KW_RETURN}									{BEGIN (SIGNED_NUM_POSSIBLE);return KW_RETURN;}
+{KW_ENDCLASS}								{BEGIN (SIGNED_NUM_POSSIBLE);return KW_ENDCLASS;}
 
-{SEP_INSTRUCT}								{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n SEP_INSTRUCT trouve : %s\n\n" , yytext);}
-{PAR_OUV}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n PAR_OUV trouve : %s\n\n" , yytext);}
-{PAR_FER}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n PAR_FER trouve : %s\n\n" , yytext);}
-{FUNC_OUV}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n FUNC_OUV trouve : %s\n\n" , yytext);}
-{FUNC_FERM}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n FUNC_FERM trouve : %s\n\n" , yytext);}
-{SEP_PARAM}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n SEP_PARAM trouve : %s\n\n" , yytext);}
+{SEP_INSTRUCT}								{BEGIN (SIGNED_NUM_POSSIBLE);return SEP_INSTRUCT;}
+{PAR_OUV}									{BEGIN (SIGNED_NUM_POSSIBLE);return PAR_OUV;}
+{PAR_FER}									{BEGIN (SIGNED_NUM_POSSIBLE);return PAR_FER;}
+{FUNC_OUV}									{BEGIN (SIGNED_NUM_POSSIBLE);return FUNC_OUV;}
+{FUNC_FERM}									{BEGIN (SIGNED_NUM_POSSIBLE);return FUNC_FERM;}
+{SEP_PARAM}									{BEGIN (SIGNED_NUM_POSSIBLE);return SEP_PARAM;}
 
-{OP_PLUS}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_PLUS trouve : %s\n\n" , yytext);}
-{OP_MOINS}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_MOINS trouve : %s\n\n" , yytext);}
-{OP_MULTI}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_MULTI trouve : %s\n\n" , yytext);}
-{OP_DIV}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_DIV trouve : %s\n\n" , yytext);}
-{OP_AFF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_AFF trouve : %s\n\n" , yytext);}
-{OP_FUNC}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_FUNC trouve : %s\n\n" , yytext);}
-{OP_INF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_INF trouve : %s\n\n" , yytext);}
-{OP_INF_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_INF_EQ trouve : %s\n\n" , yytext);}
-{OP_SUP}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_SUP trouve : %s\n\n" , yytext);}
-{OP_SUP_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_SUP_EQ trouve : %s\n\n" , yytext);}
-{OP_DIFF}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_DIFF trouve : %s\n\n" , yytext);}
-{OP_EQ}										{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_EQ trouve : %s\n\n" , yytext);}
-{OP_AND}									{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_AND trouve : %s\n\n" , yytext);}
-{OP_OR}										{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n OP_OR trouve : %s\n\n" , yytext);}
+{OP_PLUS}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_PLUS;}
+{OP_MOINS}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_MOINS;}
+{OP_MULTI}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_MULTI;}
+{OP_DIV}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_DIV;}
+{OP_AFF}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_AFF;}
+{OP_FUNC}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_FUNC;}
+{OP_INF}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_INF;}
+{OP_INF_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_INF_EQ;}
+{OP_SUP}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_SUP;}
+{OP_SUP_EQ}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_SUP_EQ;}
+{OP_DIFF}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_DIFF;}
+{OP_EQ}										{BEGIN (SIGNED_NUM_POSSIBLE);return OP_EQ;}
+{OP_AND}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_AND;}
+{OP_OR}										{BEGIN (SIGNED_NUM_POSSIBLE);return OP_OR;}
 
-<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_INT}		{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n SIGNED_VAL_INT trouve : %s\n\n" , yytext);}
-<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_FLOAT}		{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n VAL_FLOAT trouve : %s\n\n" , yytext);}
+<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_INT}		{BEGIN (SIGNED_NUM_INTERDIT);return VAL_INT;}
+<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_FLOAT}		{BEGIN (SIGNED_NUM_INTERDIT);return VAL_FLOAT;}
 
-{VAL_BOOL}									{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n VAL_BOOL trouve : %s\n\n" , yytext);}
-{VAL_INT}									{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n VAL_INT trouve : %s\n\n" , yytext);}				//faire les int flaot signé
-{VAL_FLOAT}									{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n VAL_FLOAT trouve : %s\n\n" , yytext);}
-{TYP_PRIMITIF} 								{BEGIN (SIGNED_NUM_POSSIBLE);printf("\n\n TYP_PRIMITIF trouve : %s\n\n" , yytext);}
+{VAL_BOOL}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_BOOL;}
+{VAL_INT}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_INT;}				//faire les int flaot signé
+{VAL_FLOAT}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_FLOAT;}
+{TYP_PRIMITIF} 								{BEGIN (SIGNED_NUM_POSSIBLE);return TYP_PRIMITIF;}
 
 
-{IDENF}		 								{BEGIN (SIGNED_NUM_INTERDIT);printf("\n\n IDENF trouve : %s\n\n" , yytext);}
-{COMMENT}									{printf("\n\n COM trouve : %s\n\n" , yytext);}
+{IDENF}		 								{BEGIN (SIGNED_NUM_INTERDIT);return IDENF;}
+{COMMENT}									
 
 [ \t\n]+		
-.											{printf("\n\n Erreur trouve : %d\n\n" , yytext[0]);return -1;}
+.											{return -1;}
 
 %%
 
