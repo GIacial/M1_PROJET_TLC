@@ -1,0 +1,13 @@
+bool a;
+a := true;
+bool b;
+b := false;
+int c;
+c := -9;
+int d;
+d := 3;
+
+
+b := b || a;
+d := d+c;
+a := d <= 0;

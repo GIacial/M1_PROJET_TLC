@@ -1,14 +1,14 @@
 // les retour à la ligne sont en code unix \n et non windows => pense a verifier dans View => Line Ending
 class Fg
-		
+
 	data
 		float 	fg;
 		bool 	y;
 		int 	z;
 
 	function
-		fg() return int {return -5};
-		gh() {z :=  1};
-		jh(int a , bool b , float c) {z := a};
+		fg() return int {return z-5};
+		gh() {z :=  z+1};
+		jh(int a ) {z := a*z};
 
 endClass

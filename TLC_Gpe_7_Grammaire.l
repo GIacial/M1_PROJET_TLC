@@ -88,7 +88,7 @@ COMMENT			"//".*\n
 {IDENF}		 								{BEGIN (SIGNED_NUM_INTERDIT);return IDENF;}
 {COMMENT}									
 
-[ \t\n]+		
+[ \t\n\r]+		
 .											{return -1;}
 
 %%

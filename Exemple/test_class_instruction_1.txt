@@ -1,0 +1,19 @@
+class couple
+	
+	data
+	int a;
+	int b;
+
+	function
+	
+
+endClass
+
+bool a;
+a := true;
+bool b;
+b := false;
+int c;
+c := -9;
+int d;
+d := 3;

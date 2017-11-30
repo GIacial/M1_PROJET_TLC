@@ -87,38 +87,39 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturn FUNC_FERM 		{p
 			|FUNC_OUV methodAppel FUNC_FERM											{printf("Ok Function_Corps\n");}
 			;
 
-instructionReturn	:	nUplet
-					|	expression
-					| 	methodAppel
+instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
+					|	expression													{printf("Ok Instruc_return_2\n");}
+					| 	methodAppel													{printf("Ok Instruc_return_3\n");}
 					;
 
-nUplet		:PAR_OUV valList PAR_FER
-			|valeurs
+nUplet		:PAR_OUV valList PAR_FER												{printf("Ok nUplet_1\n");}
+			|valeurs																{printf("Ok nUplet_SoloVal_1\n");}
 			;
 
-valList		:valeurs SEP_PARAM valList
-			|valeurs
+valList		:valeurs SEP_PARAM valList												{printf("Ok valList\n");}
+			|valeurs																{printf("Ok valList_fin\n");}
 
-valeurs		:VAL_BOOL
-			|VAL_FLOAT
-			|VAL_INT
-			| IDENF
+valeurs		:VAL_BOOL																{printf("Ok VAL_BOOL\n");}
+			|VAL_FLOAT																{printf("Ok VAL_FLOAT\n");}
+			|VAL_INT																{printf("Ok VAL_INT\n");}
+			| IDENF																	{printf("Ok VAriable\n");}
 			;
 
-instruction :declaVar
-			|affectation
-			|methodAppel
+instruction :declaVar																{printf("Ok Instruction_1\n");}
+			|affectation															{printf("OK Instruction_2\n");}
+			|methodAppel															{printf("OK Instruction_3\n");}
 			;
 
-expression : expNum
-			| expBool
+expression : expNum																	{printf("OK expr_1\n");}
+			| expBool																{printf("OK expr_2\n");}
 			;
 
-affectation : IDENF OP_AFF instructionReturn
+affectation : IDENF OP_AFF instructionReturn										{printf("OK affectation\n");}
 			;
 
-methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER
-			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER
+methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
+			| IDENF OP_FUNC IDENF													{printf("OK method_Var\n");}
 			;
 
 expNum 		: VAL_INT

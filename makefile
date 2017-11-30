@@ -20,7 +20,7 @@ compil:flex bison
 	@gcc -o bison.exe TLC_GPE_7_Grammaire_v1.tab.c lex.yy.c -ll -ly -lfl
 
 #lance les serie de test
-test:
+test:compil
 	@echo on fait tous les test
 	@./all_test.script
 
