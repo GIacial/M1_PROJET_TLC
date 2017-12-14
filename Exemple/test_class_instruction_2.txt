@@ -1,0 +1,16 @@
+class Bg extend Fg
+	data 
+		int min;
+		int max; 
+		float y;
+	function
+		bg(int m, int m2, float y) {(min,max,y) := (m,m2,y) };
+		moyenne(int min, int max) return float {return min+max/2};
+endClass
+
+Bg mybg;
+float a;
+a := mybg->moyenne(5,9);
+bg->print();
+bg->value();
+true != false && true;

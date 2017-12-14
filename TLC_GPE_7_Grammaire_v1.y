@@ -2,6 +2,8 @@
 	#include <string.h>
 	#include <stdio.h>
 	#include <stdlib.h>
+	extern int yylex();
+	extern int yyerror(char*);
 %}
 %token KW_CLASS 
 %token IDENF
@@ -34,6 +36,12 @@
 %token VAL_INT
 %token VAL_FLOAT
 %token SEP_PARAM
+
+%left OP_OR 
+%left OP_AND
+%left OP_EQ OP_DIFF OP_INF OP_SUP OP_INF_EQ OP_SUP_EQ
+%left OP_PLUS OP_MOINS
+%left OP_MULTI OP_DIV
 
 %start prog
 %%
@@ -93,7 +101,7 @@ instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
 					;
 
 nUplet		:PAR_OUV valList PAR_FER												{printf("Ok nUplet_1\n");}
-			|valeurs																{printf("Ok nUplet_SoloVal_1\n");}
+
 			;
 
 valList		:valeurs SEP_PARAM valList												{printf("Ok valList\n");}
@@ -110,11 +118,8 @@ instruction :declaVar																{printf("Ok Instruction_1\n");}
 			|methodAppel															{printf("OK Instruction_3\n");}
 			;
 
-expression : expNum																	{printf("OK expr_1\n");}
-			| expBool																{printf("OK expr_2\n");}
-			;
-
 affectation : IDENF OP_AFF instructionReturn										{printf("OK affectation\n");}
+			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
 			;
 
 methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
@@ -122,10 +127,25 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK meth
 			| IDENF OP_FUNC IDENF													{printf("OK method_Var\n");}
 			;
 
-expNum 		: VAL_INT
+expNum 		: expNum OP_PLUS expNum													{printf("OK +");}
+			| expNum OP_MOINS expNum												{printf("OK -");}
+			| expNum OP_MULTI expNum												{printf("OK *");}
+			| expNum OP_DIV expNum													{printf("OK /");}
+			| valeurs																{printf("OK valeurs expNum");}
 			;
 
-expBool		: VAL_BOOL
+expression	: expression OP_AND expression											{printf("OK and");}
+			| expression OP_OR expression											{printf("OK or");}
+			| expComp																{printf("OK expComp");}
+			;
+
+expComp     : expNum OP_EQ expNum													{printf("OK ==");}
+			| expNum OP_DIFF expNum													{printf("OK !=");}	
+			| expNum OP_INF expNum													{printf("OK <");}
+			| expNum OP_INF_EQ expNum												{printf("OK <=");}
+			| expNum OP_SUP expNum													{printf("OK >");}
+			| expNum OP_SUP_EQ expNum												{printf("OK >=");}
+			| expNum																{printf("OK expNum");}
 			;
 
 
@@ -135,6 +155,7 @@ int yyerror(char* s){
 		printf("ERROR %s \n", s);
 		return 0;
 	}
+
 int main(){
 	int parseError = yyparse();
 	printf("CODE PARSE %d \n",parseError);

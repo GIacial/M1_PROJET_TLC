@@ -6,7 +6,7 @@ brun:compil
 #fait le .h et .c de bison
 bison:
 	@echo bison analyse
-	@bison -d TLC_GPE_7_Grammaire_v1.y
+	@bison -d -v TLC_GPE_7_Grammaire_v1.y 
 
 #genere les lexemes
 flex:
