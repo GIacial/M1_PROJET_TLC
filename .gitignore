@@ -52,6 +52,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-*.c
-*.h
 TLC_GPE_7_Grammaire_v1.output
+lex.yy.c
+TLC_GPE_7_Grammaire_v1.tab.c
+TLC_GPE_7_Grammaire_v1.tab.h

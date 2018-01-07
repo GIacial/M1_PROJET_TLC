@@ -1,3 +1,5 @@
+CFLAG= -D_XOPEN_SOURCE -Wall -Wextra -pedantic -Wconversion -pthread
+
 #compile + lance
 brun:compil
 	@echo Lancement de l executable bison
@@ -23,13 +25,40 @@ compil:flex bison
 test:compil
 	@echo on fait tous les test
 	@./all_test.script
+#-------------------------------------------------------------------------------
+#fichier c
+allC:PileList
+	@echo fin compilation des fichier c de code
+
+#-------------------------------------------------------------------------------
+#main de test
+test.exe: PileList mainTest.c
+	@echo compilation de $@
+	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o
+#-------------------------------------------------------------------------------
+#fichier des pile list
+
+PileList:Cellule.o Iterator.o Pile.o
+	@echo fin compilation des piles et listes
+
+Cellule.o: Cellule.c Cellule.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Iterator.o: Iterator.c Iterator.h Cellule.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Pile.o: Pile.c Pile.h Iterator.h Cellule.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+#-------------------------------------------------------------------------------
 
 #clean
 .PHONY: clean
 clean:
 	@echo MENAGE
-	@rm *exe -f
-	@rm *.c -f
-	@rm *.h -f	
+	@rm *.exe -f
+	@rm *.o -f
 	@rm ResTest/Exemple/*.txt -f
 	
