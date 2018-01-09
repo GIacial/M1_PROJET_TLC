@@ -34,11 +34,11 @@ allC:PileList
 #main de test
 test.exe: PileList mainTest.c
 	@echo compilation de $@
-	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o
+	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o
 #-------------------------------------------------------------------------------
 #fichier des pile list
 
-PileList:Cellule.o Iterator.o Pile.o
+PileList:Cellule.o Iterator.o Pile.o File.o
 	@echo fin compilation des piles et listes
 
 Cellule.o: Cellule.c Cellule.h
@@ -50,6 +50,10 @@ Iterator.o: Iterator.c Iterator.h Cellule.h
 	@gcc -c $(CFLAG) $<
 
 Pile.o: Pile.c Pile.h Iterator.h Cellule.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+File.o: File.c File.h Iterator.h Cellule.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------

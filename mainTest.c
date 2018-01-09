@@ -1,36 +1,36 @@
 #include <stdio.h>
-#include "Pile.h"
+#include "File.h"
 
 
 int main(){
-	Pile p = createPile();
+	File p = createFile();
 	int a = 5, b = 6 , c = 4 , d = 3;
 	printf("Les nombres sont %d %d %d %d\n",a,b,c,d );
 	printf("On empile tout\n" );
-	addPile(p , &a);
-	addPile(p , &b);
-	addPile(p , &c);
-	addPile(p , &d);
+	addFile(p , &a);
+	addFile(p , &b);
+	addFile(p , &c);
+	addFile(p , &d);
 	printf("On parcours\n" );
-	Iterator i = getIteratorPile(p);
+	Iterator i = getIteratorFile(p);
 	while(hasNextIterator(i)){
 		int* t = (int*)nextDataIterator(i);
 		printf("on a %d\n",*t );
 	}
 	freeIterator(&i);
 	printf("On depile\n" );
-	removeHeadPile(p);
+	removeHeadFile(p);
 	printf("On parcours\n" );
-	i = getIteratorPile(p);
+	i = getIteratorFile(p);
 	while(hasNextIterator(i)){
 		int* t = (int*)nextDataIterator(i);
 		printf("on a %d\n",*t );
 	}
 	freeIterator(&i);
 	printf("On ajoute %d\n",a );
-	addPile(p,&a);
+	addFile(p,&a);
 	printf("On parcours\n" );
-	i = getIteratorPile(p);
+	i = getIteratorFile(p);
 	while(hasNextIterator(i)){
 		int* t = (int*)nextDataIterator(i);
 		printf("on a %d\n",*t );
@@ -39,7 +39,7 @@ int main(){
 
 
 	printf("On suppression\n" );
-	freePile(&p);
+	freeFile(&p);
 
 	return 0;
 }
