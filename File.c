@@ -5,7 +5,7 @@ struct File
 {
 	Cellule debut;
 	Cellule fin;
-	int size;
+	unsigned int size;
 };
 //---------------------------------------------------------
 File 	 createFile(){
@@ -58,4 +58,18 @@ void	 clearFile(File p){
 	while(!emptyFile(p)){
 		removeHeadFile(p);
 	}
+}
+//------------------------------------------------------
+unsigned int getSizeFile(File p){
+	return p->size;
+}
+//------------------------------------------------------
+File 	cloneFile(File p){
+	File r = createFile();
+	Iterator i = getIteratorFile(p);
+	while(hasNextIterator(i)){
+		addFile(r,nextDataIterator(i));
+	}
+	freeIterator(&i);
+	return r;
 }

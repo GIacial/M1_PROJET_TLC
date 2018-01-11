@@ -18,5 +18,7 @@ void	 removeHeadFile(File p);				//eneleve la tete
 bool     emptyFile(File p);					//permet de savoir si la file est vide
 Iterator getIteratorFile(File p);				//donne un iterator sur la file
 void	 clearFile(File p);						//vide la file
+unsigned int getSizeFile(File p);				//donne la taille de la file
+File 	cloneFile(File p);						//copie la file
 
 #endif //INCLUDE_FILE_H

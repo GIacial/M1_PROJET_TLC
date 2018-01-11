@@ -36,6 +36,26 @@ test.exe: PileList mainTest.c
 	@echo compilation de $@
 	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o
 #-------------------------------------------------------------------------------
+#fichier des types semantiques
+Semantique:Type.o Var.o Fonction.o
+	@echo fin compilation des types semantiques
+
+Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Fonction.o:Fonction.c Fonction.h Type.h Var.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Var.o:Var.c Var.h Type.h Fonction.h Text.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Text.o: Text.c Text.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+#-------------------------------------------------------------------------------
 #fichier des pile list
 
 PileList:Cellule.o Iterator.o Pile.o File.o
