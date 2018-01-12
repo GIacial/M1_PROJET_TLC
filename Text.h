@@ -7,6 +7,7 @@
 typedef struct Text* Text;
 
 Text createText(char* texte);
+Text copyText(Text t);
 void freeText(Text* pSurText);
 
 unsigned int sizeofText(Text t);

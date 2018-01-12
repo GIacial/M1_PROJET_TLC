@@ -63,13 +63,3 @@ void	 clearFile(File p){
 unsigned int getSizeFile(File p){
 	return p->size;
 }
-//------------------------------------------------------
-File 	cloneFile(File p){
-	File r = createFile();
-	Iterator i = getIteratorFile(p);
-	while(hasNextIterator(i)){
-		addFile(r,nextDataIterator(i));
-	}
-	freeIterator(&i);
-	return r;
-}

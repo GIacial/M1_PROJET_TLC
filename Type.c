@@ -22,8 +22,23 @@ Type 		createType(File varia , File func , Text name , Type mere, bool primitif)
 }	
 //------------------------------------------------------------------------
 void 		freeType(Type* pSurType){
+	//rajout delete du contenu
+	Iterator i = getIteratorFile((*pSurType)->variables);
+	while(hasNextIterator(i)){
+		Var v = (Var)nextDataIterator(i);
+		freeVar(&v);
+	}
+	freeIterator(&i);
 	freeFile(&((*pSurType)->variables));
+
+	i = getIteratorFile((*pSurType)->fonctions);
+	while(hasNextIterator(i)){
+		Var v = (Var)nextDataIterator(i);
+		freeVar(&v);
+	}
+	freeIterator(&i);
 	freeFile(&((*pSurType)->fonctions));
+
 	freeText(&((*pSurType)->nom));
 	free(*pSurType);
 	(*pSurType) = NULL;
@@ -38,7 +53,15 @@ Var         createVarWithType(Type t,Text nomVar){
 	if(t->primi){
 		return createVar(t,nomVar,NULL);
 	}
-	return createVar(t,nomVar,cloneFile(t->variables));
+	//copie
+	File r = createFile();
+	Iterator i = getIteratorFile(t->variables);
+	while(hasNextIterator(i)){
+		Var v = (Var)nextDataIterator(i);
+		addFile(r,createVarWithType(getTypeVar(v),copyText(getNameVar(v))));
+	}
+	freeIterator(&i);
+	return createVar(t,nomVar,r);
 }
 //------------------------------------------------------------------------
 bool		isPrimitif(Type t){

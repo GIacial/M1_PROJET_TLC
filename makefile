@@ -32,12 +32,12 @@ allC:PileList
 
 #-------------------------------------------------------------------------------
 #main de test
-test.exe: PileList mainTest.c
+test.exe: PileList mainTest.c Semantique
 	@echo compilation de $@
-	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o
+	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o
 #-------------------------------------------------------------------------------
 #fichier des types semantiques
-Semantique:Type.o Var.o Fonction.o
+Semantique:Type.o Var.o Fonction.o Text.o
 	@echo fin compilation des types semantiques
 
 Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h

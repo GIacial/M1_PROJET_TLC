@@ -18,6 +18,10 @@ Text createText(char* texte){
 	return t;
 }
 //------------------------------------------
+Text copyText(Text t){
+	return createText(t->texte);
+}
+//------------------------------------------
 void freeText(Text* pSurText){
 	free((*pSurText)->texte);
 	free(*pSurText);
