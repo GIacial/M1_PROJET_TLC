@@ -13,6 +13,7 @@ typedef struct Var * Var;
 Var createVar(Type t , Text nom , File variables);	//constructeur
 void freeVar(Var* pSurVar);							//free	
 
+void 	setValue(Var v, void* val ); 				// ajoute une valeur à la variable (si primitif)
 Type 	getTypeVar(Var v);							//donne le type de la variable
 void* 	getValueVar(Var v);							//donne la valeur de la variable
 Var   	getVarInVar(Var v , Text nomVar);			//donne la variable qui possede ce nom dans cette variable
