@@ -19,6 +19,6 @@ void* 	getValueVar(Var v);							//donne la valeur de la variable
 Var   	getVarInVar(Var v , Text nomVar);			//donne la variable qui possede ce nom dans cette variable
 bool  	isMyNameVar(Var v,Text nom);				//donne si c'est le nom de la var			
 Text	getNameVar(Var v);							//donne le nom(pas de copie)
-void* 	appFonctionVar(Var t, Text nom ,File param,Type retour) // lance la fonction
+void* 	appFonctionVar(Var t, Text nom ,File param,Type retour); // lance la fonction
 
 #endif

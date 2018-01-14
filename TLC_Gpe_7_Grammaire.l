@@ -1,5 +1,9 @@
 %{
 	#include <string.h>
+	#include "Text.h"
+	#include "TabType.h"
+	#include "PileVar.h"
+	#include "File.h"
 	#include "TLC_GPE_7_Grammaire_v1.tab.h"
 %}
 CHIFFRE			[0-9]
@@ -76,16 +80,16 @@ COMMENT			"//".*\n
 {OP_AND}									{BEGIN (SIGNED_NUM_POSSIBLE);return OP_AND;}
 {OP_OR}										{BEGIN (SIGNED_NUM_POSSIBLE);return OP_OR;}
 
-<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_INT}		{BEGIN (SIGNED_NUM_INTERDIT);return VAL_INT;}
-<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_FLOAT}		{BEGIN (SIGNED_NUM_INTERDIT);return VAL_FLOAT;}
+<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_INT}		{BEGIN (SIGNED_NUM_INTERDIT);yylval.valInt = atoi(yytext);return VAL_INT;}
+<SIGNED_NUM_POSSIBLE>{SIGNE}{VAL_FLOAT}		{BEGIN (SIGNED_NUM_INTERDIT);yylval.valFloat = atof(yytext);return VAL_FLOAT;}
 
-{VAL_BOOL}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_BOOL;}
-{VAL_INT}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_INT;}				//faire les int flaot signé
-{VAL_FLOAT}									{BEGIN (SIGNED_NUM_INTERDIT);return VAL_FLOAT;}
-{TYP_PRIMITIF} 								{BEGIN (SIGNED_NUM_POSSIBLE);return TYP_PRIMITIF;}
+{VAL_BOOL}									{BEGIN (SIGNED_NUM_INTERDIT);yylval.valBool = strcmp(yytext,"true") == 0;return VAL_BOOL;}
+{VAL_INT}									{BEGIN (SIGNED_NUM_INTERDIT);yylval.valInt = atoi(yytext);return VAL_INT;}				//faire les int flaot signé
+{VAL_FLOAT}									{BEGIN (SIGNED_NUM_INTERDIT);yylval.valFloat = atof(yytext);return VAL_FLOAT;}
+{TYP_PRIMITIF} 								{BEGIN (SIGNED_NUM_POSSIBLE);yylval.nom = createText(yytext);return TYP_PRIMITIF;}
 
 
-{IDENF}		 								{BEGIN (SIGNED_NUM_INTERDIT);return IDENF;}
+{IDENF}		 								{BEGIN (SIGNED_NUM_INTERDIT);yylval.nom = createText(yytext);return IDENF;}
 {COMMENT}									
 
 [ \t\n\r]+		

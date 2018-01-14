@@ -59,8 +59,8 @@ void delVarInPileVar(PileVar p, Text nom){
 
 
 Var getVarInPileVar(PileVar p,Text nom){
-	if(!emptyPile((*p)->variables)){
-		Iterator i = getIteratorPile((*p)->variables);
+	if(!emptyPile((p)->variables)){
+		Iterator i = getIteratorPile((p)->variables);
 		while(hasNextIterator(i)){
 			Var v = (Var)nextDataIterator(i);
 			if(isMyNameVar(v,nom)){

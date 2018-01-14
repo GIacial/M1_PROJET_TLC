@@ -41,6 +41,9 @@ void freeVar(Var* pSurVar){
 //------------------------------------------------------------------------
 
 void setValue(Var v, void* val ){
+	if(v->val != NULL){
+		free(val);
+	}
 	v->val = val;
 }
 

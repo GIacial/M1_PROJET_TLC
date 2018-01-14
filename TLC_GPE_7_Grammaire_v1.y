@@ -4,12 +4,18 @@
 	#include <stdlib.h>
 	extern int yylex();
 	extern int yyerror(char*);
+
+	#include "TabType.h"
+	#include "PileVar.h"
+	#include "File.h"
+	#include "Outils.h"
+	#include "Var.h"
 %}
 %token KW_CLASS 
-%token IDENF
+%token<nom> IDENF
 %token KW_EXTEND
 %token KW_DATA
-%token TYP_PRIMITIF
+%token<nom> TYP_PRIMITIF
 %token SEP_INSTRUCT
 %token KW_FUNCTION
 %token PAR_OUV
@@ -32,9 +38,9 @@
 %token OP_AND
 %token OP_OR
 %token KW_ENDCLASS
-%token VAL_BOOL
-%token VAL_INT
-%token VAL_FLOAT
+%token<valBool> VAL_BOOL
+%token<valInt> VAL_INT
+%token<valFloat> VAL_FLOAT
 %token SEP_PARAM
 
 %left OP_OR 
@@ -44,6 +50,19 @@
 %left OP_MULTI OP_DIV
 
 %start prog
+
+%type<variable> valeurs
+%type<variable> expNum
+%type<variable> expComp
+%type<variable> expression
+
+%union{
+	Text 	nom;
+	int 	valInt;
+	float 	valFloat;
+	bool 	valBool;
+	Var 	variable;
+}
 %%
 
 prog			:bloc  prog															{printf("Ok Prog\n");}
@@ -127,11 +146,32 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK meth
 			| IDENF OP_FUNC IDENF													{printf("OK method_Var\n");}
 			;
 
-expNum 		: expNum OP_PLUS expNum													{printf("OK +");}
-			| expNum OP_MOINS expNum												{printf("OK -");}
-			| expNum OP_MULTI expNum												{printf("OK *");}
-			| expNum OP_DIV expNum													{printf("OK /");}
-			| valeurs																{printf("OK valeurs expNum");}
+expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATION_PLUS);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (PLUS)");
+																					 	return -1;
+																					 }
+																					 $$ = r;}
+			| expNum OP_MOINS expNum												{Var r = operationVar($1,$3,OPERATION_MOINS);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (MOINS)");
+																					 	return -1;
+																					 }
+																					 $$ = r;}
+			| expNum OP_MULTI expNum												{Var r = operationVar($1,$3,OPERATION_MULTI);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (MULTI)");
+																					 	return -1;
+																					 }
+																					 $$ = r;}
+			| expNum OP_DIV expNum													{Var r = operationVar($1,$3,OPERATION_DIV);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (DIV)");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| valeurs																{$$ = $1;}
 			;
 
 expression	: expression OP_AND expression											{printf("OK and");}
