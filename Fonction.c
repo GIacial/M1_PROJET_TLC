@@ -38,7 +38,7 @@ bool		isMeFonction(Fonction f , Text nom , File param, Type retour){
 	while (ok && hasNextIterator(i) && hasNextIterator(j)){
 		Var vi = (Var)nextDataIterator(i);
 		Var vj = (Var)nextDataIterator(j);
-		ok = isSameVar(vi, vj);
+		ok = getTypeVar(vi) == getTypeVar(vj);
 	}
 	freeIterator(&i);
 	freeIterator(&j);
