@@ -7,4 +7,12 @@
 
 typedef struct TabType* TabType;
 
+#include "Type.h"
+
+TabType 	createTabType();						//cretate (avec type primitif)
+void 		freeTabType(TabType* pSurTabType);		//delete
+
+void		addTypeInTabType(TabType t, Type i);	//ajoute un type
+Type 		getTypeInTabType(TabType t, Text nom);	//lit un type (null si not find)
+
 #endif //INCLUDE_TABTYPE_H

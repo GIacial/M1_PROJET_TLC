@@ -39,12 +39,11 @@ test.exe: PileList mainTest.c Semantique Master
 #fichier des table de type et var
 Master:PileVar.o TabType.o
 	@echo fin compilation master composant
-
-PileVar.o: PileVar.c PileVar.h
+Iterator.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-TabType.o: TabType.c TabType.h
+TabType.o: TabType.c TabType.h Type.h File.h 
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------
@@ -56,11 +55,11 @@ Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-Fonction.o:Fonction.c Fonction.h Type.h Var.h Text.h
+Fonction.o:Fonction.c Fonction.h Type.h Var.h Text.h  File.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-Var.o:Var.c Var.h Type.h Fonction.h Text.h
+Var.o:Var.c Var.h Type.h Fonction.h Text.h  File.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 

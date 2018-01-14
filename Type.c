@@ -17,7 +17,9 @@ Type 		createType(File varia , File func , Text name , Type mere, bool primitif)
 	t->nom = name;
 	t->parent = mere;
 	t->primi = primitif;
-
+	//ajout des fonction value et print
+	addFile(t->fonction,createFonction(createText("value"),createFile(),NULL));
+	addFile(t->fonction,createFonction(createText("print"),createFile(),NULL));
 	return t;
 }	
 //------------------------------------------------------------------------
