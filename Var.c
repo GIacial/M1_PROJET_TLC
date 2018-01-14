@@ -80,6 +80,6 @@ Text getNameVar(Var v){
 }
 
 //------------------------------------------------------------------------
-bool isSameVar(Var v,Var g){
-	return isEgalText(v->nom,g->nom);
+void* appFonctionVar(Var t, Text nom ,File param,Type retour){
+	return appFonctionType(t->type,nom,param,retour,t);
 }
