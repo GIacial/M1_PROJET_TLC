@@ -33,8 +33,8 @@ void 		freeType(Type* pSurType){
 
 	i = getIteratorFile((*pSurType)->fonctions);
 	while(hasNextIterator(i)){
-		Var v = (Var)nextDataIterator(i);
-		freeVar(&v);
+		Fonction v = (Fonction)nextDataIterator(i);
+		freeFonction(&v);
 	}
 	freeIterator(&i);
 	freeFile(&((*pSurType)->fonctions));
@@ -64,6 +64,34 @@ Var         createVarWithType(Type t,Text nomVar){
 	return createVar(t,nomVar,r);
 }
 //------------------------------------------------------------------------
-bool		isPrimitif(Type t){
+bool		isPrimitifType(Type t){
 	return t->primi;
 }
+//------------------------------------------------------------------------
+void* 		appFonctionType(Type t, Text nom ,File param,Type retour){
+	Iterator i = getIteratorFile(t->fonctions);
+	bool ok = false;
+	void* rs = NULL;
+	while(!ok && hasNextIterator(i)){
+		Fonction f = (Fonction)nextDataIterator(i);
+		ok = isMeFonction(f,nom,param,retour);
+		if(ok){
+			rs = exec(f,param);
+		}
+	}
+	freeIterator (&i);
+	return rs;
+}
+//------------------------------------------------------------------------
+bool		isMyParentType(Type t , Type p){
+	bool ok = false;
+	if(t->parent != NULL){		
+		 ok = t->parent == p;
+		if(!ok){
+			isMyParentType(t->parent,p);
+		}
+	}
+	return ok;
+
+}
+//------------------------------------------------------------------------

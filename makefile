@@ -32,9 +32,21 @@ allC:PileList
 
 #-------------------------------------------------------------------------------
 #main de test
-test.exe: PileList mainTest.c Semantique
+test.exe: PileList mainTest.c Semantique Master
 	@echo compilation de $@
-	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o
+	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o
+#-------------------------------------------------------------------------------
+#fichier des table de type et var
+Master:PileVar.o TabType.o
+	@echo fin compilation master composant
+
+PileVar.o: PileVar.c PileVar.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+TabType.o: TabType.c TabType.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------
 #fichier des types semantiques
 Semantique:Type.o Var.o Fonction.o Text.o
