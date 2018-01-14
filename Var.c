@@ -59,7 +59,7 @@ void* 	getValueVar(Var v){
 //------------------------------------------------------------------------
 
 Var  getVarInVar(Var v , Text nomVar){
-	if(!emptyFile((*pSurVar)->variables)){
+	if(!emptyFile(v->variables)){
 		Iterator i = getIteratorFile(v->variables);
 		while(hasNextIterator(i)){
 			Var v = (Var)nextDataIterator(i);
@@ -69,8 +69,10 @@ Var  getVarInVar(Var v , Text nomVar){
 			}
 		}
 		freeIterator(&i);
-		return NULL;
+		
 	}
+	return NULL;
+
 }
 
 //------------------------------------------------------------------------
