@@ -16,5 +16,9 @@ void 		freeType(Type* pSurType);							//free le type
 
 bool		isMyNameType(Type t , Text name);					//dit si c'est le nom du tye
 Var         createVarWithType(Type t,Text nomVar);				//cree une var avec ce type
-bool		isPrimitif(Type t);									//permet de savoir si c'est un type primitif
+bool		isPrimitifType(Type t);									//permet de savoir si c'est un type primitif
+
+void* 		appFonctionType(Type t, Text nom ,File param,Type retour);			//app une fonction
+bool		isMyParentType(Type t , Type p);						//regarde si t herite de p
+
 #endif

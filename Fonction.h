@@ -10,10 +10,11 @@ typedef struct Fonction * Fonction;
 
 #include "Var.h"
 
-Fonction 	createFonction(Text nom , File param, Type retour);
-void		freeFonction(Fonction* pSurFonction);
+Fonction 	createFonction(Text nom , File param, Type retour);		//cree la fonction
+void		freeFonction(Fonction* pSurFonction);					//free la fonction
 
-bool		isMeFonction(Fonction f , Text nom , File param);
-
+bool		isMeFonction(Fonction f , Text nom , File param , Type retour);		//permet de savoir si c'est la meme fonction
+Type 		getRTypeFonction(Fonction f);										//le type de retour
+void*		exec(Fonction f,File param);										//execute le corps
 
 #endif
