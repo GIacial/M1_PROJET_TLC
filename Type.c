@@ -68,7 +68,7 @@ bool		isPrimitifType(Type t){
 	return t->primi;
 }
 //------------------------------------------------------------------------
-void* 		appFonctionType(Type t, Text nom ,File param,Type retour){
+void* 		appFonctionType(Type t, Text nom ,File param,Type retour,Var val){
 	Iterator i = getIteratorFile(t->fonctions);
 	bool ok = false;
 	void* rs = NULL;
@@ -80,6 +80,9 @@ void* 		appFonctionType(Type t, Text nom ,File param,Type retour){
 		}
 	}
 	freeIterator (&i);
+	if(!ok && t->parent!=NULL){
+		rs = appFonctionType(t->parent,nom,param,retour,val);
+	}
 	return rs;
 }
 //------------------------------------------------------------------------
