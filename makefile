@@ -44,7 +44,7 @@ Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-Fonction.o:Fonction.c Fonction.h Type.h Var.h
+Fonction.o:Fonction.c Fonction.h Type.h Var.h Text.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
