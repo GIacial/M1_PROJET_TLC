@@ -35,3 +35,13 @@ unsigned int sizeofText(Text t){
 bool isEgalText(Text t1 , Text t2){
 	return strcmp (t1->texte , t2->texte) == 0;
 }
+
+//------------------------------------------
+bool isEgalTextWithChar(Text t1 , const char * t2){
+	return strcmp (t1->texte , t2) == 0;
+}
+//------------------------------------------
+
+void afficheText(Text t1){
+	printf("%s :=",t1->texte);
+}

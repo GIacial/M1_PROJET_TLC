@@ -50,6 +50,10 @@ bool		isMyNameType(Type t , Text name){
 	return isEgalText(t->nom,name);
 }
 //------------------------------------------------------------------------
+bool		isMyNameTypeWithChar(Type t , const char* name){
+	return isEgalTextWithChar(t->nom,name);
+}
+//------------------------------------------------------------------------
 Var         createVarWithType(Type t,Text nomVar){
 	if(t->primi){
 		return createVar(t,nomVar,NULL);

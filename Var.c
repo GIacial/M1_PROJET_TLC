@@ -1,4 +1,5 @@
 #include "Var.h"
+#include <stdio.h>
 
 //------------------------------------------------------------------------
 struct Var {
@@ -86,6 +87,12 @@ bool  isMyNameVar(Var v,Text nom){
 
 //------------------------------------------------------------------------
 
+bool  isMyNameVarWithChar(Var v,const char* nom){
+	return isEgalTextWithChar(v->nom, nom);
+}
+
+//------------------------------------------------------------------------
+
 Text getNameVar(Var v){
 	return v->nom;
 }
@@ -113,5 +120,39 @@ bool copieVarInVar(Var cible ,Var contenu){
 
 	}else{
 		return false;
+	}
+}
+
+//------------------------------------------------------------------------
+void afficheVar(Var v){
+
+	afficheText(v->nom);
+
+	if(v->val !=NULL){ // variable primitives
+		if(isMyNameTypeWithChar(v->type,"int")){
+			printf("%d",(int)v->val);
+		}else if(isMyNameTypeWithChar(v->type,"float")){
+			printf("%f",(float)v->val);
+		}else if(isMyNameTypeWithChar(v->type,"bool")){
+			if(v->var){
+				printf("true");
+			}else{
+				printf("false");
+			}
+		}else {
+			fprintf(stderr, "Type primitif non trouve");
+		}
+
+	}else if(!emptyFile(v->variables)){ // variables objets
+		printf("( ");
+		Iterator i = getIteratorFile(v->variables);
+		while(hasNextIterator(i)){
+			afficheVar((Var)nextDataIterator(i));
+			printf(", ");
+		}
+		freeIterator(&i);
+		printf(" )");
+	}else {
+		fprintf(stderr,"Erreur Affichage valeur");
 	}
 }
