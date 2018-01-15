@@ -21,7 +21,7 @@ Var operationVar(Var v1,Var v2 ,enum Operation o){
 	if(isMyNameVarWithChar(v1,"")){
 		freeVar(&v1);
 	}
-	if(isMyNameVar(v2,"")){
+	if(isMyNameVarWithChar(v2,"")){
 		freeVar(&v2);
 	};
 	return res;
@@ -64,23 +64,23 @@ Var floatOperation(float v1 , float v2 , enum Operation o, Type t){
 	return v;
 }
 //----------------------------------------------
-Var BoolOperation(Var v1 , Var v2 , enum BoolOperation o, Type primiBool ){
+Var BoolOperationVar(Var v1 , Var v2 , enum BoolOperation o, Type primiBool ){
 		Var res = NULL;
 	if(getTypeVar(v1) == getTypeVar(v2) && getValueVar(v1)!= NULL && getValueVar(v2)!= NULL){
 		Type t = getTypeVar(v1);
 		if(isMyNameTypeWithChar(t,"int")){
 			//cas int
-			res = intBoolOperation(*((int*)getValueVar(v1)),*((int*)getValueVar(v2)),o,getTypeVar(v1));
+			res = intBoolOperation(*((int*)getValueVar(v1)),*((int*)getValueVar(v2)),o,primiBool);
 		}
 		else{
 			if(isMyNameTypeWithChar(t,"float")){
 				//cas float
-				res = floatBoolOperation(*((float*)getValueVar(v1)),*((float*)getValueVar(v2)),o,getTypeVar(v1));
+				res = floatBoolOperation(*((float*)getValueVar(v1)),*((float*)getValueVar(v2)),o,primiBool);
 			}
 			else{
 				if(isMyNameTypeWithChar(t,"bool")){
 				//cas bool
-				res = boolBoolOperation(*((bool*)getValueVar(v1)),*((bool*)getValueVar(v2)),o,getTypeVar(v1));
+				res = boolBoolOperation(*((bool*)getValueVar(v1)),*((bool*)getValueVar(v2)),o,primiBool);
 			}
 			}
 		}
@@ -89,7 +89,7 @@ Var BoolOperation(Var v1 , Var v2 , enum BoolOperation o, Type primiBool ){
 	if(isMyNameVarWithChar(v1,"")){
 		freeVar(&v1);
 	}
-	if(isMyNameVar(v2,"")){
+	if(isMyNameVarWithChar(v2,"")){
 		freeVar(&v2);
 	};
 	return res;

@@ -25,7 +25,8 @@ void freeVar(Var* pSurVar){
 	if((*pSurVar)->val !=NULL){
 		free((*pSurVar)->val);
 	}
-	if(!emptyFile((*pSurVar)->variables)){
+	else{//pas primitif
+		if(!emptyFile((*pSurVar)->variables)){
 		Iterator i = getIteratorFile((*pSurVar)->variables);
 		while(hasNextIterator(i)){
 			Var v = (Var)nextDataIterator(i);
@@ -33,8 +34,9 @@ void freeVar(Var* pSurVar){
 		}
 		freeIterator(&i);
 		freeFile(&((*pSurVar)->variables));
+		}
 	}
-	freeType(&((*pSurVar)->type));
+	
 	free(*pSurVar);
 	(*pSurVar) = NULL;
 }
@@ -105,22 +107,44 @@ void* appFonctionVar(Var t, Text nom ,File param,Type retour){
 //------------------------------------------------------------------------
 
 bool copieVarInVar(Var cible ,Var contenu){
-
+	bool ok = false;
 	if(cible->type == contenu->type){
-		cible->val = contenu->val;
-		clearFile(cible->variables);
-		if(!emptyFile(contenu->variables)){
-			Iterator i = getIteratorFile(contenu->variables);
-			while(hasNextIterator(i)){
-				addFile(cible->variables,nextDataIterator(i));
+		if(isPrimitifType(cible->type)){
+			if(cible->val!= NULL){
+				free(cible->val);
+				cible->val = NULL;
 			}
-			freeIterator(&i);
+			if(isMyNameTypeWithChar(cible->type,"int")){
+				cible->val = malloc(sizeof(int));
+				(*(int*)cible->val) = (*(int*)contenu->val);
+				ok = true;
+			}else if(isMyNameTypeWithChar(cible->type,"float")){
+				cible->val = malloc(sizeof(float));
+				(*(float*)cible->val) = (*(float*)contenu->val);
+				ok = true;
+			}else if(isMyNameTypeWithChar(cible->type,"bool")){
+				cible->val = malloc(sizeof(bool));
+				(*(bool*)cible->val) = (*(bool*)contenu->val);
+				ok = true;
+			}else {
+				fprintf(stderr, "Type primitif non trouve\n");
+			}
 		}
-		return true;
+		else{
+			//clearFile(cible->variables);	//faire del des p
+			if(!emptyFile(contenu->variables)){
+				Iterator i = getIteratorFile(contenu->variables);
+				while(hasNextIterator(i)){
+					addFile(cible->variables,nextDataIterator(i));
+				}
+				freeIterator(&i);
+			}
+			ok = true;
+		}
 
-	}else{
-		return false;
+
 	}
+	return ok;
 }
 
 //------------------------------------------------------------------------
@@ -130,17 +154,17 @@ void afficheVar(Var v){
 
 	if(v->val !=NULL){ // variable primitives
 		if(isMyNameTypeWithChar(v->type,"int")){
-			printf("%d",(int)v->val);
+			printf("%d\n",*((int*)v->val));
 		}else if(isMyNameTypeWithChar(v->type,"float")){
-			printf("%f",(float)v->val);
+			printf("%f\n",*((float*)v->val));
 		}else if(isMyNameTypeWithChar(v->type,"bool")){
-			if(v->var){
-				printf("true");
+			if(*((bool*)v->val)){
+				printf("true\n");
 			}else{
-				printf("false");
+				printf("false\n");
 			}
 		}else {
-			fprintf(stderr, "Type primitif non trouve");
+			fprintf(stderr, "Type primitif non trouve\n");
 		}
 
 	}else if(!emptyFile(v->variables)){ // variables objets
@@ -151,8 +175,8 @@ void afficheVar(Var v){
 			printf(", ");
 		}
 		freeIterator(&i);
-		printf(" )");
+		printf(" )\n");
 	}else {
-		fprintf(stderr,"Erreur Affichage valeur");
+		fprintf(stderr,"Erreur Affichage valeur\n");
 	}
 }

@@ -95,7 +95,7 @@ data      	:declaVar SEP_INSTRUCT data 											{printf("Ok DATA\n");}
 			|declaVar SEP_INSTRUCT  												{printf("Ok DATA_Fin\n");}
 			;
 
-declaVar	:type IDENF																{addTypeInTabType(type,createVarWithType($1,$2));}
+declaVar	:type IDENF																{addVarInPileVar(var,createVarWithType($1,$2));}
 			;
 
 type 		:TYP_PRIMITIF															{Type a = getTypeInTabType(type,$1);
@@ -105,6 +105,7 @@ type 		:TYP_PRIMITIF															{Type a = getTypeInTabType(type,$1);
 																					 	fprintf(stderr,"Erreur sémantique (type : primitif non trouvé)\n");
 																					 	return -1;
 																					 }
+																					 $$ = a;
 																					}
 			|IDENF																	{Type a = getTypeInTabType(type,$1);
 																					 Text t = $1;
@@ -113,6 +114,7 @@ type 		:TYP_PRIMITIF															{Type a = getTypeInTabType(type,$1);
 																					 	fprintf(stderr,"Erreur sémantique (type :type non trouvé)\n");
 																					 	return -1;
 																					 }
+																					 $$ = a;
 																					}
 			;
 
@@ -209,14 +211,20 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																						 	return -1;
 																						  }
 																						  Var c = $3;
+																						  afficheVar(c);
+																						  
 																						  bool ok = copieVarInVar(v,c);
+
 																						if(isMyNameVarWithChar(c,"")){//var tmp
 																							freeVar(&c);
 																						}
+
 																						if(!ok){
 																							fprintf(stderr,"Erreur sémantique (Affectation : type Non Egaux)\n");
 																					 		return -1;
 																						}
+
+																						  afficheVar(v);
 																					}
 			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
 			;
@@ -259,7 +267,7 @@ expression	: expression OP_AND expression											{Type a = getTypeInTabTypeWi
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_AND,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_AND,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -271,7 +279,7 @@ expression	: expression OP_AND expression											{Type a = getTypeInTabTypeWi
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_OR,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_OR,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -286,7 +294,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_EG,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_EG,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -298,7 +306,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_DIFF,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_DIFF,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -310,7 +318,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_INF,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_INF,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -322,7 +330,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_INFEG,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_INFEG,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -334,7 +342,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_SUP,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_SUP,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;
@@ -346,7 +354,7 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
 																					 	return -1;
 																					 }
-																					Var r = BooloperationVar($1,$3,OPERATION_SUPEG,a);
+																					Var r = BoolOperationVar($1,$3,OPERATION_SUPEG,a);
 																					 if(r == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
 																					 	return -1;

@@ -1,6 +1,6 @@
 #include "Text.h"
 #include <string.h>
-
+#include <stdio.h>
 //------------------------------------------
 struct Text
 {

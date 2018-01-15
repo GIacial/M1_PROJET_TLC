@@ -46,7 +46,7 @@ Type 		getTypeInTabType(TabType t, Text nom){
 }
 //------------------------------------------------------------
 
-Type 	getTypeInTabType(TabType t, const char * nom){
+Type 	getTypeInTabTypeWithChar(TabType t, const char * nom){
 	Iterator i = getIteratorFile(t->data);
 	Type res = NULL;
 	while(res == NULL && hasNextIterator(i)){
