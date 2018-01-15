@@ -59,6 +59,7 @@
 %type<variable> expComp
 %type<variable> expression
 %type<variable> instructionReturn
+%type<typeVar> type
 
 %union{
 	Text 	nom;
@@ -66,6 +67,7 @@
 	float 	valFloat;
 	bool 	valBool;
 	Var 	variable;
+	Type    typeVar;
 }
 %%
 
@@ -96,8 +98,22 @@ data      	:declaVar SEP_INSTRUCT data 											{printf("Ok DATA\n");}
 declaVar	:type IDENF																{addTypeInTabType(type,createVarWithType($1,$2));}
 			;
 
-type 		:TYP_PRIMITIF															{getTypeInTabType(type,$1);Text t = $1; freeText(&t);}
-			|IDENF																	{getTypeInTabType(type,$1);Text t = $1; freeText(&t);}
+type 		:TYP_PRIMITIF															{Type a = getTypeInTabType(type,$1);
+																					 Text t = $1;
+																					 freeText(&t);
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : primitif non trouvé)\n");
+																					 	return -1;
+																					 }
+																					}
+			|IDENF																	{Type a = getTypeInTabType(type,$1);
+																					 Text t = $1;
+																					 freeText(&t);
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type :type non trouvé)\n");
+																					 	return -1;
+																					 }
+																					}
 			;
 
 declaFunction:IDENF parametreDecla corpsFunction SEP_INSTRUCT declaFunction 		{printf("Ok Function\n");}
@@ -134,6 +150,7 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les bool\n");
+																							return -1;
 																						}
 																						Var r = createVarWithType(y,createText(""));
 																						bool* v = (bool*)malloc(sizeof(bool));
@@ -146,6 +163,7 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les float\n");
+																							return -1;
 																						}
 																						Var r = createVarWithType(y,createText(""));
 																						float* v = (float*)malloc(sizeof(float));
@@ -158,6 +176,7 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les int\n");
+																							return -1;
 																						}
 																						Var r = createVarWithType(y,createText(""));
 																						int* v = (int*)malloc(sizeof(int));
@@ -170,7 +189,7 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																					 Text t = $1;
 																					  freeText(&t);
 																					  if(v == NULL){
-																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF)");
+																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF)\n");
 																					 	return -1;
 																					  }
  																					  $$ = v;
@@ -182,20 +201,22 @@ instruction :declaVar																{printf("Ok Instruction_1\n");}
 			|methodAppel															{printf("OK Instruction_3\n");}
 			;
 
-affectation : IDENF OP_AFF instructionReturn										{Var v = getVarInPileVar(var,$1);
-																					 Text t = $1;
-																					  freeText(&t);
-																					  if(v == NULL){
-																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF)");
-																					 	return -1;
-																					  }
-																					  Var c = $3;
-																					  copieVarInVar(v,c);
-																					  Text n = createText("");
-																						if(isMyNameVar(c,n)){//var tmp
+affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(var,$1);
+																						 Text t = $1;
+																						  freeText(&t);
+																						  if(v == NULL){
+																						  	fprintf(stderr,"Erreur sémantique (Affectation : IDENF)\n");
+																						 	return -1;
+																						  }
+																						  Var c = $3;
+																						  bool ok = copieVarInVar(v,c);
+																						if(isMyNameVarWithChar(c,"")){//var tmp
 																							freeVar(&c);
 																						}
-																						freeText(&n);
+																						if(!ok){
+																							fprintf(stderr,"Erreur sémantique (Affectation : type Non Egaux)\n");
+																					 		return -1;
+																						}
 																					}
 			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
 			;
@@ -207,25 +228,25 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK meth
 
 expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATION_PLUS);
 																					 if(r == NULL){
-																					 	fprintf(stderr,"Erreur sémantique (PLUS)");
+																					 	fprintf(stderr,"Erreur sémantique (PLUS)\n");
 																					 	return -1;
 																					 }
 																					 $$ = r;}
 			| expNum OP_MOINS expNum												{Var r = operationVar($1,$3,OPERATION_MOINS);
 																					 if(r == NULL){
-																					 	fprintf(stderr,"Erreur sémantique (MOINS)");
+																					 	fprintf(stderr,"Erreur sémantique (MOINS)\n");
 																					 	return -1;
 																					 }
 																					 $$ = r;}
 			| expNum OP_MULTI expNum												{Var r = operationVar($1,$3,OPERATION_MULTI);
 																					 if(r == NULL){
-																					 	fprintf(stderr,"Erreur sémantique (MULTI)");
+																					 	fprintf(stderr,"Erreur sémantique (MULTI)\n");
 																					 	return -1;
 																					 }
 																					 $$ = r;}
 			| expNum OP_DIV expNum													{Var r = operationVar($1,$3,OPERATION_DIV);
 																					 if(r == NULL){
-																					 	fprintf(stderr,"Erreur sémantique (DIV)");
+																					 	fprintf(stderr,"Erreur sémantique (DIV)\n");
 																					 	return -1;
 																					 }
 																					 $$ = r;
@@ -233,17 +254,105 @@ expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATI
 			| valeurs																{$$ = $1;}
 			;
 
-expression	: expression OP_AND expression											{printf("OK and");}
-			| expression OP_OR expression											{printf("OK or");}
+expression	: expression OP_AND expression											{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_AND,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expression OP_OR expression											{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_OR,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
 			| expComp																{$$ = $1;}
 			;
 
-expComp     : expNum OP_EQ expNum													{printf("OK ==");}
-			| expNum OP_DIFF expNum													{printf("OK !=");}	
-			| expNum OP_INF expNum													{printf("OK <");}
-			| expNum OP_INF_EQ expNum												{printf("OK <=");}
-			| expNum OP_SUP expNum													{printf("OK >");}
-			| expNum OP_SUP_EQ expNum												{printf("OK >=");}
+expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_EG,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expNum OP_DIFF expNum													{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_DIFF,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expNum OP_INF expNum													{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_INF,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expNum OP_INF_EQ expNum												{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_INFEG,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expNum OP_SUP expNum													{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_SUP,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
+			| expNum OP_SUP_EQ expNum												{Type a = getTypeInTabTypeWithChar(type,"bool");
+																					 if(a == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
+																					 	return -1;
+																					 }
+																					Var r = BooloperationVar($1,$3,OPERATION_SUPEG,a);
+																					 if(r == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (expression): and\n");
+																					 	return -1;
+																					 }
+																					 $$ = r;
+																					}
 			| expNum																{$$ = $1;}
 			;
 
