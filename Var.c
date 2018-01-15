@@ -1,4 +1,5 @@
 #include "Var.h"
+#include <stdio.h>
 
 //------------------------------------------------------------------------
 struct Var {
@@ -86,6 +87,12 @@ bool  isMyNameVar(Var v,Text nom){
 
 //------------------------------------------------------------------------
 
+bool  isMyNameVarWithChar(Var v,const char* nom){
+	return isEgalTextWithChar(v->nom, nom);
+}
+
+//------------------------------------------------------------------------
+
 Text getNameVar(Var v){
 	return v->nom;
 }
@@ -93,4 +100,59 @@ Text getNameVar(Var v){
 //------------------------------------------------------------------------
 void* appFonctionVar(Var t, Text nom ,File param,Type retour){
 	return appFonctionType(t->type,nom,param,retour,t);
+}
+
+//------------------------------------------------------------------------
+
+bool copieVarInVar(Var cible ,Var contenu){
+
+	if(cible->type == contenu->type){
+		cible->val = contenu->val;
+		clearFile(cible->variables);
+		if(!emptyFile(contenu->variables)){
+			Iterator i = getIteratorFile(contenu->variables);
+			while(hasNextIterator(i)){
+				addFile(cible->variables,nextDataIterator(i));
+			}
+			freeIterator(&i);
+		}
+		return true;
+
+	}else{
+		return false;
+	}
+}
+
+//------------------------------------------------------------------------
+void afficheVar(Var v){
+
+	afficheText(v->nom);
+
+	if(v->val !=NULL){ // variable primitives
+		if(isMyNameTypeWithChar(v->type,"int")){
+			printf("%d",(int)v->val);
+		}else if(isMyNameTypeWithChar(v->type,"float")){
+			printf("%f",(float)v->val);
+		}else if(isMyNameTypeWithChar(v->type,"bool")){
+			if(v->var){
+				printf("true");
+			}else{
+				printf("false");
+			}
+		}else {
+			fprintf(stderr, "Type primitif non trouve");
+		}
+
+	}else if(!emptyFile(v->variables)){ // variables objets
+		printf("( ");
+		Iterator i = getIteratorFile(v->variables);
+		while(hasNextIterator(i)){
+			afficheVar((Var)nextDataIterator(i));
+			printf(", ");
+		}
+		freeIterator(&i);
+		printf(" )");
+	}else {
+		fprintf(stderr,"Erreur Affichage valeur");
+	}
 }

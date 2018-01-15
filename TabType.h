@@ -14,5 +14,6 @@ void 		freeTabType(TabType* pSurTabType);		//delete
 
 void		addTypeInTabType(TabType t, Type i);	//ajoute un type
 Type 		getTypeInTabType(TabType t, Text nom);	//lit un type (null si not find)
+Type 		getTypeInTabTypeWithChar(TabType t, const char* nom); 
 
 #endif //INCLUDE_TABTYPE_H
