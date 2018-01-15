@@ -94,3 +94,24 @@ Text getNameVar(Var v){
 void* appFonctionVar(Var t, Text nom ,File param,Type retour){
 	return appFonctionType(t->type,nom,param,retour,t);
 }
+
+//------------------------------------------------------------------------
+
+bool copieVarInVar(Var cible ,Var contenu){
+
+	if(cible->type == contenu->type){
+		cible->val = contenu->val;
+		clearFile(cible->variables);
+		if(!emptyFile(contenu->variables)){
+			Iterator i = getIteratorFile(contenu->variables);
+			while(hasNextIterator(i)){
+				addFile(cible->variables,nextDataIterator(i));
+			}
+			freeIterator(&i);
+		}
+		return true;
+
+	}else{
+		return false;
+	}
+}
