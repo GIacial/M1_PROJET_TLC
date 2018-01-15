@@ -1,6 +1,6 @@
 #include "TabType.h"
 #include "File.h"
-
+#include <stdio.h>
 //------------------------------------------------------------
 struct TabType
 {
@@ -36,7 +36,7 @@ void		addTypeInTabType(TabType t, Type i){
 Type 		getTypeInTabType(TabType t, Text nom){
 	Iterator i = getIteratorFile(t->data);
 	Type res = NULL;
-	while(res != NULL && hasNextIterator(i)){
+	while(res == NULL && hasNextIterator(i)){
 		Type t = (Type)nextDataIterator(i);
 		if(isMyNameType(t,nom)){
 			res = t;

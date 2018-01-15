@@ -2,6 +2,7 @@
 	#include <string.h>
 	#include <stdio.h>
 	#include <stdlib.h>
+	#include <stdbool.h>
 	extern int yylex();
 	extern int yyerror(char*);
 
@@ -9,7 +10,9 @@
 	#include "PileVar.h"
 	#include "File.h"
 	#include "Outils.h"
-	#include "Var.h"
+
+	TabType type = NULL;
+	PileVar var  = NULL;
 %}
 %token KW_CLASS 
 %token<nom> IDENF
@@ -55,6 +58,7 @@
 %type<variable> expNum
 %type<variable> expComp
 %type<variable> expression
+%type<variable> instructionReturn
 
 %union{
 	Text 	nom;
@@ -115,8 +119,8 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturn FUNC_FERM 		{p
 			;
 
 instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
-					|	expression													{printf("Ok Instruc_return_2\n");}
-					| 	methodAppel													{printf("Ok Instruc_return_3\n");}
+					|	expression													{$$ = $1;}
+					| 	methodAppel													{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
 					;
 
 nUplet		:PAR_OUV valList PAR_FER												{printf("Ok nUplet_1\n");}
@@ -126,10 +130,51 @@ nUplet		:PAR_OUV valList PAR_FER												{printf("Ok nUplet_1\n");}
 valList		:valeurs SEP_PARAM valList												{printf("Ok valList\n");}
 			|valeurs																{printf("Ok valList_fin\n");}
 
-valeurs		:VAL_BOOL																{printf("Ok VAL_BOOL\n");}
-			|VAL_FLOAT																{printf("Ok VAL_FLOAT\n");}
-			|VAL_INT																{printf("Ok VAL_INT\n");}
-			| IDENF																	{printf("Ok VAriable\n");}
+valeurs		:VAL_BOOL																{	Text t = createText("bool");
+																						Type y = getTypeInTabType(type,t);
+																						if(y == NULL){
+																							fprintf(stderr,"probleme on a pas les bool\n");
+																						}
+																						Var r = createVarWithType(y,createText(""));
+																						bool* v = (bool*)malloc(sizeof(bool));
+																						(*v) = $1;
+																						setValue(r,v);
+																						freeText(&t);
+																						$$ = r;
+																				    }
+			|VAL_FLOAT																{	Text t = createText("float");
+																						Type y = getTypeInTabType(type,t);
+																						if(y == NULL){
+																							fprintf(stderr,"probleme on a pas les float\n");
+																						}
+																						Var r = createVarWithType(y,createText(""));
+																						float* v = (float*)malloc(sizeof(float));
+																						(*v) = $1;
+																						setValue(r,v);
+																						freeText(&t);
+																						$$ = r;
+																				    }
+			|VAL_INT																{	Text t = createText("int");
+																						Type y = getTypeInTabType(type,t);
+																						if(y == NULL){
+																							fprintf(stderr,"probleme on a pas les int\n");
+																						}
+																						Var r = createVarWithType(y,createText(""));
+																						int* v = (int*)malloc(sizeof(int));
+																						(*v) = $1;
+																						setValue(r,v);
+																						freeText(&t);
+																						$$ = r;
+																				    }
+			| IDENF																	{ Var v = getVarInPileVar(var,$1);
+																					 Text t = $1;
+																					  freeText(&t);
+																					  if(v == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF)");
+																					 	return -1;
+																					  }
+ 																					  $$ = v;
+																					}
 			;
 
 instruction :declaVar																{printf("Ok Instruction_1\n");}
@@ -137,7 +182,21 @@ instruction :declaVar																{printf("Ok Instruction_1\n");}
 			|methodAppel															{printf("OK Instruction_3\n");}
 			;
 
-affectation : IDENF OP_AFF instructionReturn										{printf("OK affectation\n");}
+affectation : IDENF OP_AFF instructionReturn										{Var v = getVarInPileVar(var,$1);
+																					 Text t = $1;
+																					  freeText(&t);
+																					  if(v == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF)");
+																					 	return -1;
+																					  }
+																					  Var c = $3;
+																					  copieVarInVar(v,c);
+																					  Text n = createText("");
+																						if(isMyNameVar(c,n)){//var tmp
+																							freeVar(&c);
+																						}
+																						freeText(&n);
+																					}
 			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
 			;
 
@@ -176,7 +235,7 @@ expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATI
 
 expression	: expression OP_AND expression											{printf("OK and");}
 			| expression OP_OR expression											{printf("OK or");}
-			| expComp																{printf("OK expComp");}
+			| expComp																{$$ = $1;}
 			;
 
 expComp     : expNum OP_EQ expNum													{printf("OK ==");}
@@ -185,7 +244,7 @@ expComp     : expNum OP_EQ expNum													{printf("OK ==");}
 			| expNum OP_INF_EQ expNum												{printf("OK <=");}
 			| expNum OP_SUP expNum													{printf("OK >");}
 			| expNum OP_SUP_EQ expNum												{printf("OK >=");}
-			| expNum																{printf("OK expNum");}
+			| expNum																{$$ = $1;}
 			;
 
 
@@ -197,6 +256,8 @@ int yyerror(char* s){
 	}
 
 int main(){
+	type =  createTabType();
+	var  = createPileVar();
 	int parseError = yyparse();
 	printf("CODE PARSE %d \n",parseError);
 	return 0;

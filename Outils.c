@@ -4,7 +4,7 @@
 //----------------------------------------------
 Var operationVar(Var v1,Var v2 ,enum Operation o){
 	Var res = NULL;
-	if(getTypeVar(v1) == getTypeVar(v2)){
+	if(getTypeVar(v1) == getTypeVar(v2) && getValueVar(v1)!= NULL && getValueVar(v2)!= NULL){
 		Type t = getTypeVar(v1);
 		Text c = createText("int");
 		if(isMyNameType(t,c)){
