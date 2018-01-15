@@ -1,6 +1,5 @@
 #include "TabType.h"
 #include "File.h"
-#include <stdio.h>
 //------------------------------------------------------------
 struct TabType
 {

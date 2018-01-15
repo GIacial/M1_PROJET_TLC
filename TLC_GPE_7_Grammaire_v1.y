@@ -93,11 +93,11 @@ data      	:declaVar SEP_INSTRUCT data 											{printf("Ok DATA\n");}
 			|declaVar SEP_INSTRUCT  												{printf("Ok DATA_Fin\n");}
 			;
 
-declaVar	:type IDENF																{printf("Ok Variable\n");}
+declaVar	:type IDENF																{addTypeInTabType(type,createVarWithType($1,$2));}
 			;
 
-type 		:TYP_PRIMITIF															{printf("Ok TYPE_Primitif\n");}
-			|IDENF																	{printf("Ok TYPE_Class\n");}
+type 		:TYP_PRIMITIF															{getTypeInTabType(type,$1);Text t = $1; freeText(&t);}
+			|IDENF																	{getTypeInTabType(type,$1);Text t = $1; freeText(&t);}
 			;
 
 declaFunction:IDENF parametreDecla corpsFunction SEP_INSTRUCT declaFunction 		{printf("Ok Function\n");}
