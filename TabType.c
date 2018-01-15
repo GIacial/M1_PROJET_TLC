@@ -45,3 +45,16 @@ Type 		getTypeInTabType(TabType t, Text nom){
 
 }
 //------------------------------------------------------------
+
+Type 	getTypeInTabType(TabType t, const char * nom){
+	Iterator i = getIteratorFile(t->data);
+	Type res = NULL;
+	while(res == NULL && hasNextIterator(i)){
+		Type t = (Type)nextDataIterator(i);
+		if(isMyNameTypeWithChar(t,nom)){
+			res = t;
+		}
+	}
+	return res;
+
+}
