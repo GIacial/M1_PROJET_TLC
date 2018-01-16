@@ -59,7 +59,8 @@
 %type<variable> expComp
 %type<variable> expression
 %type<variable> instructionReturn
-%type<typeVar> type
+%type<typeVar>  type
+%type<file> 	valList
 
 %union{
 	Text 	nom;
@@ -68,6 +69,7 @@
 	bool 	valBool;
 	Var 	variable;
 	Type    typeVar;
+	File 	file;
 }
 %%
 
@@ -141,12 +143,12 @@ instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
 					| 	methodAppel													{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
 					;
 
-nUplet		:PAR_OUV valList PAR_FER												{printf("Ok nUplet_1\n");}
+nUplet		:PAR_OUV valList PAR_FER												{printf("N-uplet non gere\n");File a = $1;freeFile(&a);}
 
 			;
 
-valList		:valeurs SEP_PARAM valList												{printf("Ok valList\n");}
-			|valeurs																{printf("Ok valList_fin\n");}
+valList		:valeurs SEP_PARAM valList												{addFile($3,$1),$$=$3;}
+			|valeurs																{File f= createFile();addFile(f,$1);$$=f;}
 
 valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
@@ -196,7 +198,20 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																					  }
  																					  $$ = v;
 																					}
-			| IDENF OP_FUNC IDENF													{//var dans var}
+			| IDENF OP_FUNC IDENF													{ Var v = getVarInPileVar(var,$1);
+																					  Text t = $1;
+																					  freeText(&t);
+																					  if(v == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (valeurs : IDENF->idenf)\n");
+																					 	return -1;
+																					  }
+																					  Var w = getVarInVar(v,$3);
+																					  if(w == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (valeurs : idenf->IDENF)\n");
+																					 	return -1;
+																					  }
+																					  $$ = w;
+																					}
 			;
 
 instruction :declaVar																{printf("Ok Instruction_1\n");}
@@ -212,7 +227,6 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																						 	return -1;
 																						  }
 																						  Var c = $3;
-																						  afficheVar(c);
 																						  
 																						  bool ok = copieVarInVar(v,c);
 
@@ -225,15 +239,37 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																					 		return -1;
 																						}
 
-																						  afficheVar(v);
 																					}
 			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
-			| IDENF OP_FUNC IDENF OP_AFF instructionReturn							{//lesvar dans obj}
+			| IDENF OP_FUNC IDENF OP_AFF instructionReturn							{Var v = getVarInPileVar(var,$1);
+																					  Text t = $1;
+																					  freeText(&t);
+																					  if(v == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION : IDENF->idenf)\n");
+																					 	return -1;
+																					  }
+																					  Var w = getVarInVar(v,$3);
+																					  if(w == NULL){
+																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION: idenf->IDENF)\n");
+																					 	return -1;
+																					  }
+																					    Var c = $5;
+																						  
+																						  bool ok = copieVarInVar(w,c);
+
+																						if(isMyNameVarWithChar(c,"")){//var tmp
+																							freeVar(&c);
+																						}
+
+																						if(!ok){
+																							fprintf(stderr,"Erreur sémantique (Affectation : type Non Egaux(i->i= t))\n");
+																					 		return -1;
+																						}
+																					}
 			;
 
 methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
 			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
-			| IDENF OP_FUNC IDENF													{printf("OK method_Var\n");}
 			;
 
 expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATION_PLUS);
