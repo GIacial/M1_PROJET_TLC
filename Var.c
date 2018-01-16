@@ -131,7 +131,15 @@ bool copieVarInVar(Var cible ,Var contenu){
 			}
 		}
 		else{
-			//clearFile(cible->variables);	//faire del des p
+			if(cible->variables!=NULL && !emptyFile(cible->variables)){
+				Iterator i = getIteratorFile(cible->variables);
+				while(hasNextIterator(i)){
+					freeVar((Var)nextDataIterator(i));
+				}
+				freeIterator(&i);
+				clearFile(cible->variables);	
+			}
+			
 			if(!emptyFile(contenu->variables)){
 				Iterator i = getIteratorFile(contenu->variables);
 				while(hasNextIterator(i)){
