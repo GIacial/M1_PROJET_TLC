@@ -196,6 +196,7 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																					  }
  																					  $$ = v;
 																					}
+			| IDENF OP_FUNC IDENF													{//var dans var}
 			;
 
 instruction :declaVar																{printf("Ok Instruction_1\n");}
@@ -227,6 +228,7 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																						  afficheVar(v);
 																					}
 			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
+			| IDENF OP_FUNC IDENF OP_AFF instructionReturn							{//lesvar dans obj}
 			;
 
 methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
