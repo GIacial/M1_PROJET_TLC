@@ -131,21 +131,16 @@ bool copieVarInVar(Var cible ,Var contenu){
 			}
 		}
 		else{
-			if(cible->variables!=NULL && !emptyFile(cible->variables)){
-				Iterator i = getIteratorFile(cible->variables);
-				while(hasNextIterator(i)){
-					freeVar((Var)nextDataIterator(i));
-				}
-				freeIterator(&i);
-				clearFile(cible->variables);	
-			}
+
 			
 			if(!emptyFile(contenu->variables)){
 				Iterator i = getIteratorFile(contenu->variables);
-				while(hasNextIterator(i)){
-					addFile(cible->variables,nextDataIterator(i));
+				Iterator j = getIteratorFile(cible->varaiables);
+				while(hasNextIterator(i) &&hasNextIterator(j)){
+					copieVarInVar(nextDataIterator(j),nextDataIterator(i));
 				}
 				freeIterator(&i);
+				freeIterator(&j);
 			}
 			ok = true;
 		}
