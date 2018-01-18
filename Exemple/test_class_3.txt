@@ -2,7 +2,6 @@
 class Fg
 
 	data
-		gh 	fg;
 		bool 	y;
 		int 	z;
 

@@ -1,4 +1,4 @@
-class Bg extend Fg
+class Bg 
 	data 
 		int min;
 		int max; 
@@ -10,7 +10,6 @@ endClass
 
 Bg mybg;
 float a;
-a := mybg->moyenne(5,9);
 bg->print();
 bg->value();
 true != false && true;
