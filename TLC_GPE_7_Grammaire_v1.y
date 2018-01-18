@@ -182,7 +182,7 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturnArbre FUNC_FERM
 
 instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
 					|	expression													{$$ = $1;}
-					| 	methodAppel													{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
+					| 	methodAppelReturn											{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
 					;
 
 instructionReturnArbre : nUpletArbre
@@ -351,10 +351,36 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK meth
 																					 Text cf = $3;
 																					 freeText(&cf);
 
-
+																					 if(res == NULL){
+																					 	//delete du res car pas de retour
+																					 	free(res);
+																					 }
 
 																					}
 			;
+
+methodAppelReturn : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+																					 Text cv = $1;
+																					 freeText(&cv);
+																					 if(v == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppel : variable inexistante\n");
+																					 		return -1;
+																					 }
+																					 //verif existance fonction
+
+																					 //exec fonction
+																					 File p = createFile();
+																					 void* res = appFonctionVar(v,$3,p,NULL);
+																					 freeFile(&p);
+																					 Text cf = $3;
+																					 freeText(&cf);
+
+																					 //renvoi la var
+
+																					}
+			;
+
 
 methodAppelArbre : IDENF OP_FUNC IDENF PAR_OUV valListArbre PAR_FER							{printf("OK method_param\n");}
 			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
