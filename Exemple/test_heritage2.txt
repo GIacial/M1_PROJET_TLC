@@ -21,4 +21,4 @@ endClass
 f myVar;
 myVar->cc();
 ExtendF ok;
-not->cc();  
+ok->cc();  
