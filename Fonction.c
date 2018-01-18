@@ -1,5 +1,5 @@
 #include "Fonction.h"
-
+#include <stdio.h>
 //----------------------------------------------------------
 struct Fonction
 {
@@ -50,6 +50,17 @@ Type 		getRTypeFonction(Fonction f){
 }
 //----------------------------------------------------------
 void*		exec(Fonction f,File param,Var v){
+	if(isEgalTextWithChar(f->nom,"print")){
+		afficheVar(v);
+	}
+	else{
+		if(isEgalTextWithChar(f->nom,"value")){
+			return NULL;	//return n-uplet
+		}
+		else{
+			fprintf(stderr, "Pas fait pour le moment\n" );
+		}
+	}
 	return NULL;
 }
 //----------------------------------------------------------

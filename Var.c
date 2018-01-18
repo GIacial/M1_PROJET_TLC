@@ -155,22 +155,28 @@ void afficheVar(Var v){
 
 	afficheText(v->nom);
 
-	if(v->val !=NULL){ // variable primitives
-		if(isMyNameTypeWithChar(v->type,"int")){
-			printf("%d\n",*((int*)v->val));
-		}else if(isMyNameTypeWithChar(v->type,"float")){
-			printf("%f\n",*((float*)v->val));
-		}else if(isMyNameTypeWithChar(v->type,"bool")){
-			if(*((bool*)v->val)){
-				printf("true\n");
-			}else{
-				printf("false\n");
+	if(isPrimitifType(v->type)){
+		if(v->val !=NULL){ // variable primitives
+			if(isMyNameTypeWithChar(v->type,"int")){
+				printf("%d\n",*((int*)v->val));
+			}else if(isMyNameTypeWithChar(v->type,"float")){
+				printf("%f\n",*((float*)v->val));
+			}else if(isMyNameTypeWithChar(v->type,"bool")){
+				if(*((bool*)v->val)){
+					printf("true\n");
+				}else{
+					printf("false\n");
+				}
+			}else {
+				fprintf(stderr, "Type primitif non trouve\n");
 			}
-		}else {
-			fprintf(stderr, "Type primitif non trouve\n");
-		}
 
-	}else if(!emptyFile(v->variables)){ // variables objets
+		}
+		else{
+			fprintf(stdout, " la variable n'a pas été allouée\n" );
+		}
+	}
+	else if(!emptyFile(v->variables)){ // variables objets
 		printf("( ");
 		Iterator i = getIteratorFile(v->variables);
 		while(hasNextIterator(i)){

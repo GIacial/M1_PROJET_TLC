@@ -335,7 +335,25 @@ affectationArbre : IDENF OP_AFF instructionReturnArbre
 			;
 
 methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
-			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+																					 Text cv = $1;
+																					 freeText(&cv);
+																					 if(v == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppel : variable inexistante\n");
+																					 		return -1;
+																					 }
+																					 //verif existance fonction
+
+																					 //exec fonction
+																					 File p = createFile();
+																					 void* res = appFonctionVar(v,$3,p,NULL);
+																					 freeFile(&p);
+																					 Text cf = $3;
+																					 freeText(&cf);
+
+
+
+																					}
 			;
 
 methodAppelArbre : IDENF OP_FUNC IDENF PAR_OUV valListArbre PAR_FER							{printf("OK method_param\n");}
