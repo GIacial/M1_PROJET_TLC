@@ -4,6 +4,7 @@
 	#include "TabType.h"
 	#include "PileVar.h"
 	#include "File.h"
+	#include "Couple.h"
 	#include "TLC_GPE_7_Grammaire_v1.tab.h"
 %}
 CHIFFRE			[0-9]

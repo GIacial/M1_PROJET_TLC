@@ -10,6 +10,7 @@
 	#include "PileVar.h"
 	#include "File.h"
 	#include "Outils.h"
+	#include "Couple.h"
 
 	TabType type = NULL;
 	PileVar var  = NULL;
@@ -61,6 +62,14 @@
 %type<variable> instructionReturn
 %type<typeVar>  type
 %type<file> 	valList
+%type<pair>		enteteClass
+%type<pair>		contenuClass
+%type<file> 	data
+%type<file>		declaFunction
+%type<variable>  declaVarClass
+%type<file> 	parametreDecla
+%type<pair> 	corpsFunction
+%type<file> 	parametre
 
 %union{
 	Text 	nom;
@@ -70,31 +79,56 @@
 	Var 	variable;
 	Type    typeVar;
 	File 	file;
+	Couple  pair;
 }
 %%
 
-prog			:bloc  prog															{printf("Ok Prog\n");}
-				|bloc 																{printf("Ok Prog_FIN\n");YYACCEPT;}
+prog			:bloc  prog															
+				|bloc 																{YYACCEPT;}
 				;
 
-bloc		: class 																{printf("Ok BLOC_CLASS\n");}
-			|instruction SEP_INSTRUCT												{printf("Ok BLOC_INSTRUCTION\n");}
+bloc		: class 																
+			|instruction SEP_INSTRUCT												
 			;
 
-class 		:enteteClass contenuClass KW_ENDCLASS									{printf("Ok CLASS\n");}
+class 		:enteteClass contenuClass KW_ENDCLASS									{Text nomType = getFirstDataCouple($1);
+																					 Type mere 	= getSecondDataCouple($1);
+																					 File data  = getFirstDataCouple($2);
+																					 File fonction = getSecondDataCouple($2);
+																					 Couple a = $1;
+																					 Couple b = $2;
+																					 freeCouple(&a);
+																					 freeCouple(&b);
+																					 addTypeInTabType(type,createType(data,fonction,nomType,mere,false));
+																					}
 			;
 
-enteteClass	:KW_CLASS IDENF															{printf("Ok ENTETE_CLASS\n");}
-			|KW_CLASS IDENF KW_EXTEND IDENF											{printf("Ok ENTETE_CLASS_EXTEND\n");}
+enteteClass	:KW_CLASS IDENF															{$$ = createCouple($2,NULL);}
+			|KW_CLASS IDENF KW_EXTEND IDENF											{Type mere = getTypeInTabType(type,$4);
+																					 Text tm = $4;
+																					 freeText(&tm);
+																					 if(mere == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (enteteClass : type mere non trouvé)\n");
+																					 	return -1;
+																					 }
+																					 if(isPrimitifType(mere)){//normalement pas possible grace au lex
+																					 	fprintf(stderr,"Erreur sémantique (enteteClass : type mere primitif)\n");
+																					 	return -1;
+																					 }
+																					 $$ = createCouple($2,mere);
+																					}
 			;
 
-contenuClass:KW_DATA data KW_FUNCTION declaFunction 								{printf("Ok CONTENU_CLASS_DF\n");}
-			|KW_DATA  KW_FUNCTION declaFunction 									{printf("Ok CONTENU_CLASS_F\n");}
-			|KW_DATA data KW_FUNCTION  												{printf("Ok CONTENU_CLASS_D\n");}
+contenuClass:KW_DATA data KW_FUNCTION declaFunction 								{$$ = createCouple($2,$4);}
+			|KW_DATA  KW_FUNCTION declaFunction 									{$$ = createCouple(createFile(),$3);}
+			|KW_DATA data KW_FUNCTION  												{$$ = createCouple($2,createFile());}
 			;
 
-data      	:declaVar SEP_INSTRUCT data 											{printf("Ok DATA\n");}
-			|declaVar SEP_INSTRUCT  												{printf("Ok DATA_Fin\n");}
+data      	:declaVarClass SEP_INSTRUCT data 											{addFile($3,$1); $$ = $3;}
+			|declaVarClass SEP_INSTRUCT  												{File f = createFile(); addFile(f,$1); $$ = f;}
+			;
+
+declaVarClass:type IDENF															{$$ = createVarWithType($1,$2);}
 			;
 
 declaVar	:type IDENF																{addVarInPileVar(var,createVarWithType($1,$2));}
@@ -120,22 +154,30 @@ type 		:TYP_PRIMITIF															{Type a = getTypeInTabType(type,$1);
 																					}
 			;
 
-declaFunction:IDENF parametreDecla corpsFunction SEP_INSTRUCT declaFunction 		{printf("Ok Function\n");}
-			|IDENF parametreDecla corpsFunction SEP_INSTRUCT						{printf("Ok Function_FIN\n");}	
+declaFunction:IDENF parametreDecla corpsFunction SEP_INSTRUCT declaFunction 		{addFile($5,createFonction($1,$2,getSecondDataCouple($3))) ;
+																					 Couple a = $3;
+																					 freeCouple(&a);
+																					  $$ = $5;}
+			|IDENF parametreDecla corpsFunction SEP_INSTRUCT						{File f = createFile();
+																					 addFile(f,createFonction($1,$2,getSecondDataCouple($3)/*type r*/)) ;
+																					 Couple a = $3;
+																					 freeCouple(&a);
+																					  $$ = f;
+																					}	
 			;
 
 
-parametreDecla	:PAR_OUV parametre PAR_FER											{printf("Ok Function Param\n");}
-				|PAR_OUV PAR_FER													{printf("Ok Function No Param \n");}
+parametreDecla	:PAR_OUV parametre PAR_FER											{$$ = $2;}
+				|PAR_OUV PAR_FER													{$$ = createFile();}
 			;
 
-parametre 	:declaVar SEP_PARAM parametre 											{printf("Ok Function_Params\n");}
-			|declaVar																{printf("Ok Function_Param_FIN\n");}
+parametre 	:declaVarClass SEP_PARAM parametre 											{ addFile($3,$1); $$ =$3;}
+			|declaVarClass																{File f = createFile(); addFile(f,$1); $$ =f;}
 		  	;
 
-corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturn FUNC_FERM 		{printf("Ok Function_Corps_Return\n");}
-			|FUNC_OUV affectation FUNC_FERM											{printf("Ok Function_Corps\n");}
-			|FUNC_OUV methodAppel FUNC_FERM											{printf("Ok Function_Corps\n");}
+corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturnArbre FUNC_FERM 	{$$ = createCouple(NULL,$2);}
+			|FUNC_OUV affectationArbre FUNC_FERM									{$$ = createCouple(NULL,NULL);}
+			|FUNC_OUV methodAppelArbre FUNC_FERM									{$$ = createCouple(NULL,NULL);}
 			;
 
 instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
@@ -143,12 +185,24 @@ instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
 					| 	methodAppel													{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
 					;
 
-nUplet		:PAR_OUV valList PAR_FER												{printf("N-uplet non gere\n");File a = $1;freeFile(&a);}
+instructionReturnArbre : nUpletArbre
+						| expressionArbre
+						|methodAppelArbre
+						;
 
+nUplet		:PAR_OUV valList PAR_FER												{printf("N-uplet non gere\n");File a = $2;freeFile(&a);}
+			;
+
+nUpletArbre : PAR_OUV valListArbre PAR_FER
 			;
 
 valList		:valeurs SEP_PARAM valList												{addFile($3,$1),$$=$3;}
 			|valeurs																{File f= createFile();addFile(f,$1);$$=f;}
+			;
+
+valListArbre:valeursArbre SEP_PARAM valListArbre										
+			|valeursArbre
+			;
 
 valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
@@ -214,6 +268,13 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																					}
 			;
 
+valeursArbre:VAL_BOOL														
+			|VAL_FLOAT																
+			|VAL_INT																
+			| IDENF																	
+			| IDENF OP_FUNC IDENF										
+			;		
+
 instruction :declaVar																{printf("Ok Instruction_1\n");}
 			|affectation															{printf("OK Instruction_2\n");}
 			|methodAppel															{printf("OK Instruction_3\n");}
@@ -268,7 +329,16 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																					}
 			;
 
+affectationArbre : IDENF OP_AFF instructionReturnArbre										
+			| nUpletArbre OP_AFF instructionReturnArbre 									
+			| IDENF OP_FUNC IDENF OP_AFF instructionReturnArbre							
+			;
+
 methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
+			;
+
+methodAppelArbre : IDENF OP_FUNC IDENF PAR_OUV valListArbre PAR_FER							{printf("OK method_param\n");}
 			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{printf("OK method_funcVide\n");}
 			;
 
@@ -300,6 +370,14 @@ expNum 		: expNum OP_PLUS expNum													{Var r = operationVar($1,$3,OPERATI
 			| valeurs																{$$ = $1;}
 			;
 
+expNumArbre : expNumArbre OP_PLUS expNumArbre													
+			| expNumArbre OP_MOINS expNumArbre												
+																					
+			| expNumArbre OP_MULTI expNumArbre											
+			| expNumArbre OP_DIV expNumArbre												
+			| valeursArbre																
+			;
+
 expression	: expression OP_AND expression											{Type a = getTypeInTabTypeWithChar(type,"bool");
 																					 if(a == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (type : bool non trouvé)\n");
@@ -325,6 +403,11 @@ expression	: expression OP_AND expression											{Type a = getTypeInTabTypeWi
 																					 $$ = r;
 																					}
 			| expComp																{$$ = $1;}
+			;
+
+expressionArbre	: expressionArbre OP_AND expressionArbre											
+			| expressionArbre OP_OR expressionArbre											
+			| expCompArbre																
 			;
 
 expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar(type,"bool");
@@ -400,6 +483,15 @@ expComp     : expNum OP_EQ expNum													{Type a = getTypeInTabTypeWithChar
 																					 $$ = r;
 																					}
 			| expNum																{$$ = $1;}
+			;
+
+expCompArbre    : expNumArbre OP_EQ expNumArbre													
+			| expNumArbre OP_DIFF expNumArbre													
+			| expNumArbre OP_INF expNumArbre													
+			| expNumArbre OP_INF_EQ expNumArbre												
+			| expNumArbre OP_SUP expNumArbre													
+			| expNumArbre OP_SUP_EQ expNumArbre												
+			| expNumArbre															
 			;
 
 

@@ -49,7 +49,7 @@ Type 		getRTypeFonction(Fonction f){
 	return f->retour;
 }
 //----------------------------------------------------------
-void*		exec(Fonction f,File param){
+void*		exec(Fonction f,File param,Var v){
 	return NULL;
 }
 //----------------------------------------------------------
