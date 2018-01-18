@@ -1,0 +1,24 @@
+class f 
+
+	data 
+		int x;
+		int y;
+
+	function 
+		cc() return int {return 0};
+endClass 
+
+class ExtendF extend f
+
+	data 
+		int x;
+		f y;
+		bool a;	
+
+endClass
+
+
+f myVar;
+myVar->cc();
+ExtendF ok;
+ok->cc();  

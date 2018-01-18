@@ -1,0 +1,7 @@
+class f 
+
+	data 
+		int x;
+		toto y; // type non defini
+
+endClass 
