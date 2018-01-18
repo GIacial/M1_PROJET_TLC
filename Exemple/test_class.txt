@@ -1,0 +1,14 @@
+// c'est un commentaire...
+class Fg
+
+	data
+		gh 	fg;
+		bool 	y;
+		int 	z;
+
+	function
+		fg() return int {return z-5};
+		gh() {z :=  z+1};
+		jh(int a , int b ) {fg := (a,b,z)};
+
+endClass

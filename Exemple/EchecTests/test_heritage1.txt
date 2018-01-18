@@ -1,0 +1,28 @@
+class f 
+
+	data 
+		int x;
+		int y;
+
+	function 
+		cc() return int {return 0};
+endClass 
+
+class notExtendF 
+
+	data 
+		int x;
+		int y;
+		bool a;	
+
+endClass
+
+
+f myVar;
+myVar->cc();
+notExtendF not;
+not->cc(); // doit échouer 
+
+
+
+
