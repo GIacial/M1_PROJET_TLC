@@ -81,7 +81,7 @@ void* 		appFonctionType(Type t, Text nom ,File param,Type retour,Var val){
 		Fonction f = (Fonction)nextDataIterator(i);
 		ok = isMeFonction(f,nom,param,retour);
 		if(ok){
-			rs = exec(f,param);
+			rs = exec(f,param,val);
 		}
 	}
 	freeIterator (&i);
@@ -92,8 +92,8 @@ void* 		appFonctionType(Type t, Text nom ,File param,Type retour,Var val){
 }
 //------------------------------------------------------------------------
 bool		isMyParentType(Type t , Type p){
-	bool ok = false;
-	if(t->parent != NULL){		
+	bool ok = t == p;
+	if(t->parent != NULL && !ok){		
 		 ok = t->parent == p;
 		if(!ok){
 			isMyParentType(t->parent,p);

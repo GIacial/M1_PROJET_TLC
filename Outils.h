@@ -10,6 +10,7 @@ enum BoolOperation{
 	OPERATION_INF,OPERATION_SUP,OPERATION_INFEG,OPERATION_SUPEG,OPERATION_EG,OPERATION_DIFF,OPERATION_AND,OPERATION_OR
 };
 
+
 Var operationVar(Var v1,Var v2 ,enum Operation o);		//fait les verif et l'operation
 Var intOperation(int v1 , int v2 , enum Operation o ,Type t);	//fais op sur int
 Var floatOperation(float v1 , float v2 , enum Operation o, Type t);	//op sur float

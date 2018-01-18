@@ -19,7 +19,7 @@ flex:
 compil:flex bison PileList Semantique Master
 	@echo compil
 #	@gcc -o lex.exe  lex.yy.c -lfl
-	@gcc -o bison.exe TLC_GPE_7_Grammaire_v1.tab.c lex.yy.c -ll -ly -lfl Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o
+	@gcc -o bison.exe TLC_GPE_7_Grammaire_v1.tab.c lex.yy.c -ll -ly -lfl Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o Couple.o
 
 #lance les serie de test
 test:compil
@@ -37,7 +37,7 @@ test.exe: PileList mainTest.c Semantique Master
 	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o
 #-------------------------------------------------------------------------------
 #fichier des table de type et var
-Master:PileVar.o TabType.o Outils.o
+Master:PileVar.o TabType.o Outils.o Couple.o
 	@echo fin compilation master composant
 
 PileVar.o: PileVar.c PileVar.h Var.h Text.h Pile.h Iterator.h
@@ -49,6 +49,10 @@ TabType.o: TabType.c TabType.h Type.h File.h
 	@gcc -c $(CFLAG) $<
 
 Outils.o:Outils.c Outils.h Type.h Var.h Fonction.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
+
+Couple.o:Couple.c Couple.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------

@@ -135,7 +135,7 @@ bool copieVarInVar(Var cible ,Var contenu){
 			
 			if(!emptyFile(contenu->variables)){
 				Iterator i = getIteratorFile(contenu->variables);
-				Iterator j = getIteratorFile(cible->varaiables);
+				Iterator j = getIteratorFile(cible->variables);
 				while(hasNextIterator(i) &&hasNextIterator(j)){
 					copieVarInVar(nextDataIterator(j),nextDataIterator(i));
 				}
