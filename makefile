@@ -19,7 +19,7 @@ flex:
 compil:flex bison PileList Semantique Master
 	@echo compil
 #	@gcc -o lex.exe  lex.yy.c -lfl
-	@gcc -o bison.exe TLC_GPE_7_Grammaire_v1.tab.c lex.yy.c -ll -ly -lfl Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o Couple.o  N_Uplet.o
+	@gcc -o bison.exe TLC_GPE_7_Grammaire_v1.tab.c lex.yy.c -ll -ly -lfl Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o Couple.o  N_Uplet.o NoeudArbre.o
 
 #lance les serie de test
 test:compil
@@ -37,7 +37,7 @@ test.exe: PileList mainTest.c Semantique Master
 	@gcc -o $@ $(CFLAG) mainTest.c Cellule.o Iterator.o Pile.o File.o Type.o Var.o Fonction.o Text.o PileVar.o TabType.o Outils.o
 #-------------------------------------------------------------------------------
 #fichier des table de type et var
-Master:PileVar.o TabType.o Outils.o Couple.o N_Uplet.o
+Master:PileVar.o TabType.o Outils.o Couple.o N_Uplet.o NoeudArbre.o
 	@echo fin compilation master composant
 
 PileVar.o: PileVar.c PileVar.h Var.h Text.h Pile.h Iterator.h
@@ -59,16 +59,20 @@ Couple.o:Couple.c Couple.h
 N_Uplet.o:N_Uplet.c N_Uplet.h File.h Iterator.h Var.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
+
+NoeudArbre.o:NoeudArbre.c NoeudArbre.h
+	@echo compilation de $@
+	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------
 #fichier des types semantiques
 Semantique:Type.o Var.o Fonction.o Text.o
 	@echo fin compilation des types semantiques
 
-Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h
+Type.o:Type.c Type.h Fonction.h Var.h File.h Text.h  N_Uplet.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-Fonction.o:Fonction.c Fonction.h Type.h Var.h Text.h File.h
+Fonction.o:Fonction.c Fonction.h Type.h Var.h Text.h File.h  N_Uplet.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 

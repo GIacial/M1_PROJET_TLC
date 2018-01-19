@@ -48,13 +48,13 @@ Type 		getRTypeFonction(Fonction f){
 	return f->retour;
 }
 //----------------------------------------------------------
-Var		exec(Fonction f,File param,Var v){
+N_Uplet		exec(Fonction f,File param,Var v){
 	if(isEgalTextWithChar(f->nom,"print")){
 		afficheVar(v);
 	}
 	else{
 		if(isEgalTextWithChar(f->nom,"value")){
-			return NULL;	//return n-uplet
+			return getNUpletVar(v);	//return n-uplet
 		}
 		else{
 			fprintf(stderr, "Pas fait pour le moment\n" );

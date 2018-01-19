@@ -70,7 +70,7 @@
 %type<file> 	parametreDecla
 %type<pair> 	corpsFunction
 %type<file> 	parametre
-%type<variable> methodAppelReturn
+%type<uplet> methodAppelReturn
 %type<uplet> 	nUplet
 
 %union{
@@ -185,7 +185,7 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturnArbre FUNC_FERM
 
 instructionReturn	:	nUplet														{$$ = $1;}
 					|	expression													{File f = createFile();addFile(f,$1);$$ = createNUplet(f,false);}
-					| 	methodAppelReturn											{File f = createFile();addFile(f,$1);$$ = createNUplet(f,false);}
+					| 	methodAppelReturn											{$$ = $1;}
 					;
 
 instructionReturnArbre : nUpletArbre
@@ -375,7 +375,7 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = getVarI
 																					 	return -1;
 																					 }
 																					 //exec fonction
-																					 Var res = appFonctionVar(v,$3,p);
+																					 N_Uplet res = appFonctionVar(v,$3,p);
 																					 Iterator i = getIteratorFile(p);
 																					 while(hasNextIterator(i)){
 																					 	Var l = (Var)nextDataIterator(i);
@@ -389,7 +389,7 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = getVarI
 
 																					 if(res != NULL){
 																					 	//delete du res car pas de retour
-																					 	free(res);
+																					 	freeNUplet(&res);
 																					 }
 																					}
 			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
@@ -411,13 +411,13 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = getVarI
 																					 	return -1;
 																					 }
 																					 //exec fonction
-																					 Var res = appFonctionVar(v,$3,p);
+																					 N_Uplet res = appFonctionVar(v,$3,p);
 																					 freeFile(&p);
 																					 freeText(&cf);
 
 																					 if(res != NULL){
 																					 	//delete du res car pas de retour
-																					 	free(res);
+																					 	freeNUplet(&res);
 																					 }
 
 																					}
@@ -459,7 +459,7 @@ methodAppelReturn : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = g
 																					 	return -1;
 																					 }
 																					 //exec fonction
-																					 Var res = appFonctionVar(v,$3,p);
+																					 N_Uplet res = appFonctionVar(v,$3,p);
 																					 Iterator i = getIteratorFile(p);
 																					 while(hasNextIterator(i)){
 																					 	Var l = (Var)nextDataIterator(i);
@@ -496,7 +496,7 @@ methodAppelReturn : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = g
 																					 	return -1;
 																					 }
 																					 //exec fonction
-																					 Var res = appFonctionVar(v,$3,p);
+																					 N_Uplet res = appFonctionVar(v,$3,p);
 																					 freeFile(&p);
 																					 freeText(&cf);
 

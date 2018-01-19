@@ -102,7 +102,7 @@ Text getNameVar(Var v){
 }
 
 //------------------------------------------------------------------------
-Var appFonctionVar(Var t, Text nom ,File param){
+N_Uplet appFonctionVar(Var t, Text nom ,File param){
 	return appFonctionType(t->type,nom,param,t);
 }
 
@@ -237,4 +237,16 @@ bool 	affectationVarWithNUplet(Var cible,N_Uplet contenu){
 	}
 	
 	return ok;
+}
+//----------------------------------------------------------------------------------
+N_Uplet getNUpletVar(Var v){
+	File f = createFile();
+	if(!isPrimitifType(v->type)){
+		Iterator i = getIteratorFile(v->variables);
+		while(hasNextIterator(i)){
+			addFile(f,nextDataIterator(i));
+		}
+		freeIterator(&i);
+	}
+	return createNUplet(f,true);
 }

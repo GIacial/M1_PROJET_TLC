@@ -21,10 +21,11 @@ Var   	getVarInVar(Var v , Text nomVar);			//donne la variable qui possede ce no
 bool  	isMyNameVar(Var v,Text nom);				//donne si c'est le nom de la var	
 bool  	isMyNameVarWithChar(Var v,const char* nom);	 // donne si c'est le nom de la var
 Text	getNameVar(Var v);							//donne le nom(pas de copie)
-Var 	appFonctionVar(Var t, Text nom ,File param); // lance la fonction
+N_Uplet 	appFonctionVar(Var t, Text nom ,File param); // lance la fonction
 bool	isMyFonctionVar(Var v ,Text nom ,File param );//verif l'existance de la fonction
 bool	copieVarInVar(Var cible ,Var contenu);							//verif type des deux puis copie les data de l'un vers l'autre
 void 	afficheVar(Var v); 							// affiche la variable
-bool 	affectationVarWithNUplet(Var cible,N_Uplet contenu);
+bool 	affectationVarWithNUplet(Var cible,N_Uplet contenu);	//affectation avec un nuplet
+N_Uplet getNUpletVar(Var v);								//donne le n-uplet contenant les champs de la var
 
 #endif

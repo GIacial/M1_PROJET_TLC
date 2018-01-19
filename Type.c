@@ -73,10 +73,10 @@ bool		isPrimitifType(Type t){
 	return t->primi;
 }
 //------------------------------------------------------------------------
-Var 		appFonctionType(Type t, Text nom ,File param,Var val){
+N_Uplet 		appFonctionType(Type t, Text nom ,File param,Var val){
 	Iterator i = getIteratorFile(t->fonctions);
 	bool ok = false;
-	Var rs = NULL;
+	N_Uplet rs = NULL;
 	while(!ok && hasNextIterator(i)){
 		Fonction f = (Fonction)nextDataIterator(i);
 		ok = isMeFonction(f,nom,param);
