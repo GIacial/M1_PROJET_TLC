@@ -60,7 +60,7 @@ N_Uplet.o:N_Uplet.c N_Uplet.h File.h Iterator.h Var.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 
-NoeudArbre.o:NoeudArbre.c NoeudArbre.h
+NoeudArbre.o:NoeudArbre.c NoeudArbre.h N_Uplet.h
 	@echo compilation de $@
 	@gcc -c $(CFLAG) $<
 #-------------------------------------------------------------------------------
