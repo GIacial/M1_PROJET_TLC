@@ -113,4 +113,5 @@ clean:
 	@rm *.exe -f
 	@rm *.o -f
 	@rm ResTest/Exemple/*.txt -f
+	@rm ResTest/Exemple/EchecTests/*.txt -f
 	

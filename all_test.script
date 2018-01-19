@@ -2,9 +2,19 @@ cpt=0
 all=0
 for VAR in $(find Exemple/*.txt);
 do
-	./bison.exe < $VAR > ResTest/$VAR;
+	./bison.exe < $VAR > ResTest/$VAR 2>>ResTest/$VAR;
 	all=$(expr $all + 1)
 	ret=$(grep -c 'CODE PARSE 0' ResTest/$VAR)
+	if [ "$ret" = "1" ];
+	then cpt=$(expr $cpt + 1)
+	else echo "Echec de $VAR"
+	fi
+done 
+for VAR in $(find Exemple/EchecTests/*.txt);
+do
+	./bison.exe < $VAR > ResTest/$VAR 2>>ResTest/$VAR;
+	all=$(expr $all + 1)
+	ret=$(grep -c 'CODE PARSE -1' ResTest/$VAR)
 	if [ "$ret" = "1" ];
 	then cpt=$(expr $cpt + 1)
 	else echo "Echec de $VAR"
