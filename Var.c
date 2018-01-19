@@ -195,3 +195,46 @@ void afficheVar(Var v){
 bool	isMyFonctionVar(Var v ,Text nom ,File param ){
 	return isMyFonctionType(v->type,nom,param);
 }
+//--------------------------------------------------------------------------
+bool 	affectationVarWithNUplet(Var cible,N_Uplet contenu){
+	bool ok = true;
+	if(isReelNUplet(contenu)){
+			ok = getSizeFile(cible->variables) == getSizeNUplet(contenu);
+		Iterator ci = getIteratorFile(cible->variables);
+		Iterator co = getIteratorNUplet(contenu);
+		while(hasNextIterator(ci) && ok){
+			Var vi = nextDataIterator(ci);
+			Var vo = nextDataIterator(co);
+			if(getTypeVar(vi) == getTypeVar(vo)){
+				copieVarInVar(vi,vo);
+			}
+			else{
+				ok = false;
+			}
+		}
+		freeIterator(&ci);
+		freeIterator(&co);
+	}
+	else{
+		//contient la var qui va devenir mienne
+		Iterator co = getIteratorNUplet(contenu);
+		if(hasNextIterator(co) && ok){
+			Var vo = nextDataIterator(co);
+			if(getTypeVar(cible) == getTypeVar(vo)){
+				copieVarInVar(cible,vo);
+			}
+			else{
+				ok = false;
+			}
+			
+		}
+		else{
+				ok = false;
+		}
+
+		freeIterator(&co);
+
+	}
+	
+	return ok;
+}

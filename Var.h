@@ -9,6 +9,7 @@
 typedef struct Var * Var;
 
 #include "Type.h"
+#include "N_Uplet.h"
 
 Var createVar(Type t , Text nom , File variables);	//constructeur
 void freeVar(Var* pSurVar);							//free	
@@ -24,5 +25,6 @@ Var 	appFonctionVar(Var t, Text nom ,File param); // lance la fonction
 bool	isMyFonctionVar(Var v ,Text nom ,File param );//verif l'existance de la fonction
 bool	copieVarInVar(Var cible ,Var contenu);							//verif type des deux puis copie les data de l'un vers l'autre
 void 	afficheVar(Var v); 							// affiche la variable
+bool 	affectationVarWithNUplet(Var cible,N_Uplet contenu);
 
 #endif

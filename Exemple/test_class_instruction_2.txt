@@ -8,7 +8,7 @@ class Bg
 		moyenne(int min, int max) return float {return min+max/2};
 endClass
 
-Bg mybg;
+Bg bg;
 float a;
 bg->print();
 bg->value();

@@ -59,7 +59,7 @@
 %type<variable> expNum
 %type<variable> expComp
 %type<variable> expression
-%type<variable> instructionReturn
+%type<uplet> instructionReturn
 %type<typeVar>  type
 %type<file> 	valList
 %type<pair>		enteteClass
@@ -71,6 +71,7 @@
 %type<pair> 	corpsFunction
 %type<file> 	parametre
 %type<variable> methodAppelReturn
+%type<uplet> 	nUplet
 
 %union{
 	Text 	nom;
@@ -81,6 +82,7 @@
 	Type    typeVar;
 	File 	file;
 	Couple  pair;
+	N_Uplet uplet;
 }
 %%
 
@@ -181,9 +183,9 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturnArbre FUNC_FERM
 			|FUNC_OUV methodAppelArbre FUNC_FERM									{$$ = createCouple(NULL,NULL);}
 			;
 
-instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
-					|	expression													{$$ = $1;}
-					| 	methodAppelReturn											{$$ = $1;}
+instructionReturn	:	nUplet														{$$ = $1;}
+					|	expression													{File f = createFile();addFile(f,$1);$$ = createNUplet(f,false);}
+					| 	methodAppelReturn											{File f = createFile();addFile(f,$1);$$ = createNUplet(f,false);}
 					;
 
 instructionReturnArbre : nUpletArbre
@@ -191,7 +193,7 @@ instructionReturnArbre : nUpletArbre
 						|methodAppelArbre
 						;
 
-nUplet		:PAR_OUV valList PAR_FER												{printf("N-uplet non gere\n");File a = $2;freeFile(&a);}
+nUplet		:PAR_OUV valList PAR_FER												{$$ = createNUplet($2,true);}
 			;
 
 nUpletArbre : PAR_OUV valListArbre PAR_FER
@@ -288,13 +290,9 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																						  	fprintf(stderr,"Erreur sémantique (Affectation : IDENF)\n");
 																						 	return -1;
 																						  }
-																						  Var c = $3;
-																						  
-																						  bool ok = copieVarInVar(v,c);
-
-																						if(isMyNameVarWithChar(c,"")){//var tmp
-																							freeVar(&c);
-																						}
+																						  N_Uplet c = $3;
+																						  bool ok = affectationVarWithNUplet(v,c);
+																						  freeNUplet(&c);
 
 																						if(!ok){
 																							fprintf(stderr,"Erreur sémantique (Affectation : type Non Egaux)\n");
@@ -302,7 +300,17 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																						}
 
 																					}
-			| nUplet OP_AFF instructionReturn 										{printf("OK affectation nUplet");}
+			| nUplet OP_AFF instructionReturn 										{	N_Uplet c = $1;
+																						N_Uplet d = $3;
+																						if(!affectationNUplet(c,d)){
+																							freeNUplet(&c);
+																							freeNUplet(&d);
+																							fprintf(stderr,"Erreur sémantique (Affectation : nUplet different)\n");
+																					 		return -1;
+																						}
+																						freeNUplet(&c);
+																						freeNUplet(&d);
+																					}
 			| IDENF OP_FUNC IDENF OP_AFF instructionReturn							{Var v = getVarInPileVar(var,$1);
 																					  Text t = $1;
 																					  freeText(&t);
@@ -315,13 +323,9 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION: idenf->IDENF)\n");
 																					 	return -1;
 																					  }
-																					    Var c = $5;
-																						  
-																						  bool ok = copieVarInVar(w,c);
-
-																						if(isMyNameVarWithChar(c,"")){//var tmp
-																							freeVar(&c);
-																						}
+																					    N_Uplet c = $5;
+																						  bool ok = affectationVarWithNUplet(v,c);
+																						  freeNUplet(&c);
 
 																						if(!ok){
 																							fprintf(stderr,"Erreur sémantique (Affectation : type Non Egaux(i->i= t))\n");
