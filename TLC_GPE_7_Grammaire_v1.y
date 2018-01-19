@@ -70,6 +70,7 @@
 %type<file> 	parametreDecla
 %type<pair> 	corpsFunction
 %type<file> 	parametre
+%type<variable> methodAppelReturn
 
 %union{
 	Text 	nom;
@@ -182,7 +183,7 @@ corpsFunction:KW_RETURN type FUNC_OUV KW_RETURN instructionReturnArbre FUNC_FERM
 
 instructionReturn	:	nUplet														{printf("Ok Instruc_return_1\n");}
 					|	expression													{$$ = $1;}
-					| 	methodAppelReturn											{printf("Ok Instruc_return_3 (Verif type retour fonction)\n");}
+					| 	methodAppelReturn											{$$ = $1;}
 					;
 
 instructionReturnArbre : nUpletArbre
@@ -275,9 +276,9 @@ valeursArbre:VAL_BOOL
 			| IDENF OP_FUNC IDENF										
 			;		
 
-instruction :declaVar																{printf("Ok Instruction_1\n");}
-			|affectation															{printf("OK Instruction_2\n");}
-			|methodAppel															{printf("OK Instruction_3\n");}
+instruction :declaVar																
+			|affectation															
+			|methodAppel															
 			;
 
 affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(var,$1);
@@ -334,24 +335,83 @@ affectationArbre : IDENF OP_AFF instructionReturnArbre
 			| IDENF OP_FUNC IDENF OP_AFF instructionReturnArbre							
 			;
 
-methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
-			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = getVarInPileVar(var,$1);
 																					 Text cv = $1;
+																					 Text cf = $3;
+																					 File p = $5;
 																					 freeText(&cv);
 																					 if(v == NULL){
 																					 	fprintf(stderr,"Erreur sémantique (methodAppel : variable inexistante\n");
-																					 		return -1;
+																					 	Iterator i = getIteratorFile(p);
+																						 while(hasNextIterator(i)){
+																						 	Var l = (Var)nextDataIterator(i);
+																						 	if(isMyNameVarWithChar(l,"")){
+																						 		freeVar(&l);
+																						 	}
+																						 }
+																						 freeIterator(&i);
+																						 freeFile(&p);
+																						 freeText(&cf);	
+																					 	return -1;
 																					 }
-																					 //verif existance fonction
 
+																					 //verif existance fonction
+																					 if(!isMyFonctionVar(v,$3,p)){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppel : fonction inexistante\n");
+																					 	Iterator i = getIteratorFile(p);
+																						 while(hasNextIterator(i)){
+																						 	Var l = (Var)nextDataIterator(i);
+																						 	if(isMyNameVarWithChar(l,"")){
+																						 		freeVar(&l);
+																						 	}
+																						 }
+																						 freeIterator(&i);
+																						 freeFile(&p);
+																						 freeText(&cf);
+																					 	return -1;
+																					 }
 																					 //exec fonction
-																					 File p = createFile();
-																					 void* res = appFonctionVar(v,$3,p,NULL);
+																					 Var res = appFonctionVar(v,$3,p);
+																					 Iterator i = getIteratorFile(p);
+																					 while(hasNextIterator(i)){
+																					 	Var l = (Var)nextDataIterator(i);
+																					 	if(isMyNameVarWithChar(l,"")){
+																					 		freeVar(&l);
+																					 	}
+																					 }
+																					 freeIterator(&i);
 																					 freeFile(&p);
-																					 Text cf = $3;
 																					 freeText(&cf);
 
-																					 if(res == NULL){
+																					 if(res != NULL){
+																					 	//delete du res car pas de retour
+																					 	free(res);
+																					 }
+																					}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+																					 Text cv = $1;
+																					 Text cf = $3;
+																					 freeText(&cv);
+																					 if(v == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppel : variable inexistante\n");
+																					 	freeText(&cf);	
+																					 	return -1;
+																					 }
+
+																					 File p = createFile();
+																					 //verif existance fonction
+																					 if(!isMyFonctionVar(v,$3,p)){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppel : fonction inexistante\n");
+																					 	freeFile(&p);
+																					 	freeText(&cf);
+																					 	return -1;
+																					 }
+																					 //exec fonction
+																					 Var res = appFonctionVar(v,$3,p);
+																					 freeFile(&p);
+																					 freeText(&cf);
+
+																					 if(res != NULL){
 																					 	//delete du res car pas de retour
 																					 	free(res);
 																					 }
@@ -359,25 +419,89 @@ methodAppel : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK meth
 																					}
 			;
 
-methodAppelReturn : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{printf("OK method_param\n");}
-			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+methodAppelReturn : IDENF OP_FUNC IDENF PAR_OUV valList PAR_FER							{Var v = getVarInPileVar(var,$1);
 																					 Text cv = $1;
+																					 Text cf = $3;
+																					 File p = $5;
 																					 freeText(&cv);
 																					 if(v == NULL){
-																					 	fprintf(stderr,"Erreur sémantique (methodAppel : variable inexistante\n");
-																					 		return -1;
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : variable inexistante\n");
+																					 	Iterator i = getIteratorFile(p);
+																						 while(hasNextIterator(i)){
+																						 	Var l = (Var)nextDataIterator(i);
+																						 	if(isMyNameVarWithChar(l,"")){
+																						 		freeVar(&l);
+																						 	}
+																						 }
+																						 freeIterator(&i);
+																						 freeFile(&p);
+																						 freeText(&cf);	
+																					 	return -1;
 																					 }
-																					 //verif existance fonction
 
+																					 //verif existance fonction
+																					 if(!isMyFonctionVar(v,$3,p)){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : fonction inexistante\n");
+																					 	Iterator i = getIteratorFile(p);
+																						 while(hasNextIterator(i)){
+																						 	Var l = (Var)nextDataIterator(i);
+																						 	if(isMyNameVarWithChar(l,"")){
+																						 		freeVar(&l);
+																						 	}
+																						 }
+																						 freeIterator(&i);
+																						 freeFile(&p);
+																						 freeText(&cf);
+																					 	return -1;
+																					 }
 																					 //exec fonction
-																					 File p = createFile();
-																					 void* res = appFonctionVar(v,$3,p,NULL);
+																					 Var res = appFonctionVar(v,$3,p);
+																					 Iterator i = getIteratorFile(p);
+																					 while(hasNextIterator(i)){
+																					 	Var l = (Var)nextDataIterator(i);
+																					 	if(isMyNameVarWithChar(l,"")){
+																					 		freeVar(&l);
+																					 	}
+																					 }
+																					 freeIterator(&i);
 																					 freeFile(&p);
+																					 freeText(&cf);
+
+																					 if(res == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : pas de valeur de retour\n");
+																					 	return -1;
+																					 }
+																					 $$ = res;
+																					}
+			| IDENF OP_FUNC IDENF PAR_OUV PAR_FER									{Var v = getVarInPileVar(var,$1);
+																					 Text cv = $1;
 																					 Text cf = $3;
+																					 freeText(&cv);
+																					 if(v == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : variable inexistante\n");
+																					 	freeText(&cf);	
+																					 	return -1;
+																					 }
+
+																					 File p = createFile();
+																					 //verif existance fonction
+																					 if(!isMyFonctionVar(v,$3,p)){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : fonction inexistante\n");
+																					 	freeFile(&p);
+																					 	freeText(&cf);
+																					 	return -1;
+																					 }
+																					 //exec fonction
+																					 Var res = appFonctionVar(v,$3,p);
+																					 freeFile(&p);
 																					 freeText(&cf);
 
 																					 //renvoi la var
-
+																					 if(res == NULL){
+																					 	fprintf(stderr,"Erreur sémantique (methodAppelReturn : pas de valeur de retour\n");
+																					 	return -1;
+																					 }
+																					 	$$ = res;
 																					}
 			;
 
@@ -550,6 +674,9 @@ int main(){
 	type =  createTabType();
 	var  = createPileVar();
 	int parseError = yyparse();
+	freeTabType(&type);
+	freePileVar(&var);
 	printf("CODE PARSE %d \n",parseError);
+
 	return 0;
 }

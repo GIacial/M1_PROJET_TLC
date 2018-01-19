@@ -22,9 +22,11 @@ Var createVar(Type t , Text nom , File variables){
 //------------------------------------------------------------------------
 void freeVar(Var* pSurVar){
 	freeText(&((*pSurVar)->nom));
-	if((*pSurVar)->val !=NULL){
-		free((*pSurVar)->val);
-	}
+	if(isPrimitifType((*pSurVar)->type)){
+		if((*pSurVar)->val !=NULL){
+			free((*pSurVar)->val);
+		}
+	}	
 	else{//pas primitif
 		if(!emptyFile((*pSurVar)->variables)){
 		Iterator i = getIteratorFile((*pSurVar)->variables);
@@ -100,8 +102,8 @@ Text getNameVar(Var v){
 }
 
 //------------------------------------------------------------------------
-void* appFonctionVar(Var t, Text nom ,File param,Type retour){
-	return appFonctionType(t->type,nom,param,retour,t);
+Var appFonctionVar(Var t, Text nom ,File param){
+	return appFonctionType(t->type,nom,param,t);
 }
 
 //------------------------------------------------------------------------
@@ -188,4 +190,8 @@ void afficheVar(Var v){
 	}else {
 		fprintf(stderr,"Erreur Affichage valeur\n");
 	}
+}
+//-------------------------------------------------------------------------
+bool	isMyFonctionVar(Var v ,Text nom ,File param ){
+	return isMyFonctionType(v->type,nom,param);
 }

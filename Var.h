@@ -20,9 +20,9 @@ Var   	getVarInVar(Var v , Text nomVar);			//donne la variable qui possede ce no
 bool  	isMyNameVar(Var v,Text nom);				//donne si c'est le nom de la var	
 bool  	isMyNameVarWithChar(Var v,const char* nom);	 // donne si c'est le nom de la var
 Text	getNameVar(Var v);							//donne le nom(pas de copie)
-void* 	appFonctionVar(Var t, Text nom ,File param,Type retour); // lance la fonction
+Var 	appFonctionVar(Var t, Text nom ,File param); // lance la fonction
+bool	isMyFonctionVar(Var v ,Text nom ,File param );//verif l'existance de la fonction
 bool	copieVarInVar(Var cible ,Var contenu);							//verif type des deux puis copie les data de l'un vers l'autre
 void 	afficheVar(Var v); 							// affiche la variable
-//Var 	cloneVar(Var v);							//clone la variable
 
 #endif

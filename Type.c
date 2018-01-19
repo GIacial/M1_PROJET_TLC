@@ -73,20 +73,20 @@ bool		isPrimitifType(Type t){
 	return t->primi;
 }
 //------------------------------------------------------------------------
-void* 		appFonctionType(Type t, Text nom ,File param,Type retour,Var val){
+Var 		appFonctionType(Type t, Text nom ,File param,Var val){
 	Iterator i = getIteratorFile(t->fonctions);
 	bool ok = false;
-	void* rs = NULL;
+	Var rs = NULL;
 	while(!ok && hasNextIterator(i)){
 		Fonction f = (Fonction)nextDataIterator(i);
-		ok = isMeFonction(f,nom,param,retour);
+		ok = isMeFonction(f,nom,param);
 		if(ok){
 			rs = exec(f,param,val);
 		}
 	}
 	freeIterator (&i);
 	if(!ok && t->parent!=NULL){
-		rs = appFonctionType(t->parent,nom,param,retour,val);
+		rs = appFonctionType(t->parent,nom,param,val);
 	}
 	return rs;
 }
@@ -103,3 +103,16 @@ bool		isMyParentType(Type t , Type p){
 
 }
 //------------------------------------------------------------------------
+bool		isMyFonctionType(Type t,Text nom ,File param ){
+	Iterator i = getIteratorFile(t->fonctions);
+	bool ok = false;
+	while(!ok && hasNextIterator(i)){
+		Fonction f = (Fonction)nextDataIterator(i);
+		ok = isMeFonction(f,nom,param);
+	}
+	freeIterator (&i);
+	if(!ok && t->parent!=NULL){
+		ok = isMyFonctionType(t->parent,nom,param);
+	}
+	return ok;
+}

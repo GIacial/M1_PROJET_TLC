@@ -22,8 +22,8 @@ void freePileVar(PileVar* ptr){
 			freeVar(&v);
 		}
 		freeIterator(&i);
-		freePile(&((*ptr)->variables));
 	}
+	freePile(&((*ptr)->variables));
 	free(*ptr);
 	(*ptr) = NULL;
 }

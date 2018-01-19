@@ -13,8 +13,8 @@ typedef struct Fonction * Fonction;
 Fonction 	createFonction(Text nom , File param, Type retour);		//cree la fonction
 void		freeFonction(Fonction* pSurFonction);					//free la fonction
 
-bool		isMeFonction(Fonction f , Text nom , File param , Type retour);		//permet de savoir si c'est la meme fonction
+bool		isMeFonction(Fonction f , Text nom , File param );		//permet de savoir si c'est la meme fonction
 Type 		getRTypeFonction(Fonction f);										//le type de retour
-void*		exec(Fonction f,File param,Var v);										//execute le corps
+Var		exec(Fonction f,File param,Var v);										//execute le corps
 
 #endif

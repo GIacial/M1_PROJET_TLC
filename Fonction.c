@@ -30,9 +30,8 @@ void		freeFonction(Fonction* pSurFonction){
 	(*pSurFonction) = NULL;
 }
 //----------------------------------------------------------
-bool		isMeFonction(Fonction f , Text nom , File param, Type retour){
-	bool ok = isEgalText(f->nom,nom) && getSizeFile(param) == getSizeFile(f->param)
-				&& f->retour == retour;
+bool		isMeFonction(Fonction f , Text nom , File param){
+	bool ok = isEgalText(f->nom,nom) && getSizeFile(param) == getSizeFile(f->param);
 	Iterator i = getIteratorFile(f->param);
 	Iterator j = getIteratorFile(param);
 	while (ok && hasNextIterator(i) && hasNextIterator(j)){
@@ -49,7 +48,7 @@ Type 		getRTypeFonction(Fonction f){
 	return f->retour;
 }
 //----------------------------------------------------------
-void*		exec(Fonction f,File param,Var v){
+Var		exec(Fonction f,File param,Var v){
 	if(isEgalTextWithChar(f->nom,"print")){
 		afficheVar(v);
 	}
