@@ -209,6 +209,7 @@ valListArbre:valeursArbre SEP_PARAM valListArbre
 
 valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						Type y = getTypeInTabType(type,t);
+																						freeText(&t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les bool\n");
 																							return -1;
@@ -217,11 +218,11 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						bool* v = (bool*)malloc(sizeof(bool));
 																						(*v) = $1;
 																						setValue(r,v);
-																						freeText(&t);
 																						$$ = r;
 																				    }
 			|VAL_FLOAT																{	Text t = createText("float");
 																						Type y = getTypeInTabType(type,t);
+																						freeText(&t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les float\n");
 																							return -1;
@@ -230,11 +231,11 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						float* v = (float*)malloc(sizeof(float));
 																						(*v) = $1;
 																						setValue(r,v);
-																						freeText(&t);
 																						$$ = r;
 																				    }
 			|VAL_INT																{	Text t = createText("int");
 																						Type y = getTypeInTabType(type,t);
+																						freeText(&t);
 																						if(y == NULL){
 																							fprintf(stderr,"probleme on a pas les int\n");
 																							return -1;
@@ -243,7 +244,6 @@ valeurs		:VAL_BOOL																{	Text t = createText("bool");
 																						int* v = (int*)malloc(sizeof(int));
 																						(*v) = $1;
 																						setValue(r,v);
-																						freeText(&t);
 																						$$ = r;
 																				    }
 			| IDENF																	{ Var v = getVarInPileVar(var,$1);
@@ -286,11 +286,12 @@ instruction :declaVar
 affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(var,$1);
 																						 Text t = $1;
 																						  freeText(&t);
+																						  N_Uplet c = $3;
 																						  if(v == NULL){
+																						  	freeNUplet(&c);
 																						  	fprintf(stderr,"Erreur sémantique (Affectation : IDENF)\n");
 																						 	return -1;
 																						  }
-																						  N_Uplet c = $3;
 																						  bool ok = affectationVarWithNUplet(v,c);
 																						  freeNUplet(&c);
 
@@ -314,16 +315,18 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 			| IDENF OP_FUNC IDENF OP_AFF instructionReturn							{Var v = getVarInPileVar(var,$1);
 																					  Text t = $1;
 																					  freeText(&t);
+																					    N_Uplet c = $5;
 																					  if(v == NULL){
+																					  	freeNUplet(&c);
 																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION : IDENF->idenf)\n");
 																					 	return -1;
 																					  }
 																					  Var w = getVarInVar(v,$3);
 																					  if(w == NULL){
+																					  	freeNUplet(&c);
 																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION: idenf->IDENF)\n");
 																					 	return -1;
 																					  }
-																					    N_Uplet c = $5;
 																						  bool ok = affectationVarWithNUplet(v,c);
 																						  freeNUplet(&c);
 
