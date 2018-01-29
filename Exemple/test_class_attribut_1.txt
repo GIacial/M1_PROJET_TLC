@@ -1,0 +1,29 @@
+class fg
+	
+	data
+	int a;
+	float b;
+	bool c;
+
+	function
+	
+
+endClass
+class gf
+	
+	data
+	int af;
+	float bf;
+	bool cf;
+
+	function
+	
+
+endClass
+fg f;
+gf g;
+f := (5,5.5,true);
+g := f->value();
+f := (4,1.5,false);
+f->print();
+g->print();

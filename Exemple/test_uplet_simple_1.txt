@@ -1,0 +1,18 @@
+class uplets
+	
+	data
+	int a;
+	int b;
+
+	function
+	
+
+endClass
+
+uplets t1;
+t1:=(4,6);
+int a;
+a:=20;
+int b;
+b:=12;
+t1:=(a,b);

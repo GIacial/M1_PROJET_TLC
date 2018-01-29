@@ -1,0 +1,15 @@
+class uplets
+	
+	data
+	int a;
+	int b;
+
+	function
+	
+
+endClass
+
+uplets t1;
+t1->a:=5;
+t1->b:=6;
+t1->print();

@@ -327,7 +327,7 @@ affectation : IDENF OP_AFF instructionReturn										{	Var v = getVarInPileVar(
 																					  	fprintf(stderr,"Erreur sémantique (AFFECTATION: idenf->IDENF)\n");
 																					 	return -1;
 																					  }
-																						  bool ok = affectationVarWithNUplet(v,c);
+																						  bool ok = affectationVarWithNUplet(w,c);
 																						  freeNUplet(&c);
 
 																						if(!ok){
